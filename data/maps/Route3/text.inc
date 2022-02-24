@@ -9,10 +9,10 @@ Route3_Text_ColtonIntro:: @ 81834E6
     .string "I saw you in VIRIDIAN FOREST!$"
 
 Route3_Text_ColtonDefeat:: @ 8183509
-    .string "You beat me again!$"
+    .string "Ah, even with my hunting bird!$"
 
 Route3_Text_ColtonPostBattle:: @ 818351C
-    .string "There are other kinds of POKéMON\n"
+    .string "There are other Bug-type POKéMON\n"
     .string "than the ones you find in forests.$"
 
 Route3_Text_BenIntro:: @ 8183560

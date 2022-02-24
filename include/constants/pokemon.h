@@ -114,8 +114,8 @@
 #define NUMBER_OF_MON_TYPES     0x12
 
 #define MOVE_CAT_PHYSICAL 0
-#define MOVE_CAT_SPECIAL 1
-#define MOVE_CAT_STATUS 2
+#define MOVE_CAT_STATUS 1
+#define MOVE_CAT_SPECIAL 2
 
 // Pokemon egg groups
 #define EGG_GROUP_NONE 0

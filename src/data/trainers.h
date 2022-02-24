@@ -1246,9 +1246,9 @@ const struct Trainer gTrainers[] = {
         .trainerName = _("SAMMY"),
         .items = {},
         .doubleBattle = FALSE,
-        .aiFlags = AI_SCRIPT_CHECK_BAD_MOVE,
+        .aiFlags = AI_SCRIPT_CHECK_BAD_MOVE | AI_SCRIPT_TRY_TO_FAINT,
         .partySize = NELEMS(sParty_BugCatcherSammy),
-        .party = {.NoItemDefaultMoves = sParty_BugCatcherSammy}
+        .party = {.NoItemCustomMoves = sParty_BugCatcherSammy}
     },
     [TRAINER_BUG_CATCHER_COLTON] = {
         .partyFlags = 0,

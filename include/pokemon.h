@@ -294,7 +294,7 @@ enum
 #define EVO_FRIENDSHIP_NIGHT 0x0003 // Pokémon levels up at night with friendship ≥ 220
 #define EVO_LEVEL            0x0004 // Pokémon reaches the specified level
 #define EVO_TRADE            0x0005 // Pokémon is traded
-#define EVO_TRADE_ITEM       0x0006 // Pokémon is traded while it's holding the specified item
+#define EVO_HELD_ITEM       0x0006 // Pokémon is traded while it's holding the specified item
 #define EVO_ITEM             0x0007 // specified item is used on Pokémon
 #define EVO_LEVEL_ATK_GT_DEF 0x0008 // Pokémon reaches the specified level with attack > defense
 #define EVO_LEVEL_ATK_EQ_DEF 0x0009 // Pokémon reaches the specified level with attack = defense

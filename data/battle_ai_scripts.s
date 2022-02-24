@@ -248,23 +248,38 @@ AI_CBM_BellyDrum:: @ 81DA019
 	if_hp_less_than AI_USER, 51, Score_Minus10
 
 AI_CBM_AttackUp:: @ 81DA020
-	if_stat_level_equal AI_USER, STAT_ATK, 12, Score_Minus10
+  if_stat_level_equal AI_USER, STAT_ATK, 8, Score_Minus1
+  if_stat_level_equal AI_USER, STAT_ATK, 9, Score_Minus2
+  if_stat_level_equal AI_USER, STAT_ATK, 10, Score_Minus3
+  if_stat_level_more_than AI_USER, STAT_ATK, 10, Score_Minus10
 	end
 
 AI_CBM_DefenseUp:: @ 81DA029
-	if_stat_level_equal AI_USER, STAT_DEF, 12, Score_Minus10
+  if_stat_level_equal AI_USER, STAT_DEF, 8, Score_Minus1
+  if_stat_level_equal AI_USER, STAT_DEF, 9, Score_Minus2
+  if_stat_level_equal AI_USER, STAT_DEF, 10, Score_Minus3
+  if_stat_level_more_than AI_USER, STAT_DEF, 10, Score_Minus10
 	end
 
 AI_CBM_SpeedUp:: @ 81DA032
-	if_stat_level_equal AI_USER, STAT_SPEED, 12, Score_Minus10
+  if_stat_level_equal AI_USER, STAT_SPEED, 8, Score_Minus1
+  if_stat_level_equal AI_USER, STAT_SPEED, 9, Score_Minus2
+  if_stat_level_equal AI_USER, STAT_SPEED, 10, Score_Minus3
+  if_stat_level_more_than AI_USER, STAT_SPEED, 10, Score_Minus10
 	end
 
 AI_CBM_SpAtkUp:: @ 81DA03B
-	if_stat_level_equal AI_USER, STAT_SPATK, 12, Score_Minus10
+  if_stat_level_equal AI_USER, STAT_SPATK, 8, Score_Minus1
+  if_stat_level_equal AI_USER, STAT_SPATK, 9, Score_Minus2
+  if_stat_level_equal AI_USER, STAT_SPATK, 10, Score_Minus3
+  if_stat_level_more_than AI_USER, STAT_SPATK, 10, Score_Minus10
 	end
 
 AI_CBM_SpDefUp:: @ 81DA044
-	if_stat_level_equal AI_USER, STAT_SPDEF, 12, Score_Minus10
+  if_stat_level_equal AI_USER, STAT_SPDEF, 8, Score_Minus1
+  if_stat_level_equal AI_USER, STAT_SPDEF, 9, Score_Minus2
+  if_stat_level_equal AI_USER, STAT_SPDEF, 10, Score_Minus3
+  if_stat_level_more_than AI_USER, STAT_SPDEF, 10, Score_Minus10
 	end
 
 AI_CBM_AccUp:: @ 81DA04D
@@ -276,36 +291,64 @@ AI_CBM_EvasionUp:: @ 81DA056
 	end
 
 AI_CBM_AttackDown:: @ 81DA05F
+  if_stat_level_less_than AI_TARGET, STAT_ATK, 5, Score_Minus3
+  if_stat_level_less_than AI_TARGET, STAT_ATK, 4, Score_Minus3
+  if_stat_level_less_than AI_TARGET, STAT_ATK, 3, Score_Minus5
+  if_stat_level_less_than AI_TARGET, STAT_ATK, 2, Score_Minus5
 	if_stat_level_equal AI_TARGET, STAT_ATK, 0, Score_Minus10
 	get_ability AI_TARGET
 	if_equal ABILITY_HYPER_CUTTER, Score_Minus10
 	goto CheckIfAbilityBlocksStatChange
 
 AI_CBM_DefenseDown:: @ 81DA074
+  if_stat_level_less_than AI_TARGET, STAT_DEF, 5, Score_Minus3
+  if_stat_level_less_than AI_TARGET, STAT_DEF, 4, Score_Minus3
+  if_stat_level_less_than AI_TARGET, STAT_DEF, 3, Score_Minus5
+  if_stat_level_less_than AI_TARGET, STAT_DEF, 2, Score_Minus5
 	if_stat_level_equal AI_TARGET, STAT_DEF, 0, Score_Minus10
 	goto CheckIfAbilityBlocksStatChange
 
 AI_CBM_SpeedDown:: @ 81DA081
+  if_stat_level_less_than AI_TARGET, STAT_SPEED, 5, Score_Minus3
+  if_stat_level_less_than AI_TARGET, STAT_SPEED, 4, Score_Minus3
+  if_stat_level_less_than AI_TARGET, STAT_SPEED, 3, Score_Minus5
+  if_stat_level_less_than AI_TARGET, STAT_SPEED, 2, Score_Minus5
 	if_stat_level_equal AI_TARGET, STAT_SPEED, 0, Score_Minus10
-@	get_ability AI_TARGET  @ Improvement in Emerald
-@	if_equal ABILITY_SPEED_BOOST, Score_Minus10
+	get_ability AI_TARGET  @ Improvement in Emerald
+	if_equal ABILITY_SPEED_BOOST, Score_Minus10
 	goto CheckIfAbilityBlocksStatChange
 
 AI_CBM_SpAtkDown:: @ 81DA08E
+  if_stat_level_less_than AI_TARGET, STAT_SPATK, 5, Score_Minus3
+  if_stat_level_less_than AI_TARGET, STAT_SPATK, 4, Score_Minus3
+  if_stat_level_less_than AI_TARGET, STAT_SPATK, 3, Score_Minus5
+  if_stat_level_less_than AI_TARGET, STAT_SPATK, 2, Score_Minus5
 	if_stat_level_equal AI_TARGET, STAT_SPATK, 0, Score_Minus10
 	goto CheckIfAbilityBlocksStatChange
 
 AI_CBM_SpDefDown:: @ 81DA09B
+  if_stat_level_less_than AI_TARGET, STAT_SPDEF, 5, Score_Minus3
+  if_stat_level_less_than AI_TARGET, STAT_SPDEF, 4, Score_Minus3
+  if_stat_level_less_than AI_TARGET, STAT_SPDEF, 3, Score_Minus5
+  if_stat_level_less_than AI_TARGET, STAT_SPDEF, 2, Score_Minus5
 	if_stat_level_equal AI_TARGET, STAT_SPDEF, 0, Score_Minus10
 	goto CheckIfAbilityBlocksStatChange
 
 AI_CBM_AccDown:: @ 81DA0A8
+  if_stat_level_less_than AI_TARGET, STAT_ACC, 5, Score_Minus3
+  if_stat_level_less_than AI_TARGET, STAT_ACC, 4, Score_Minus3
+  if_stat_level_less_than AI_TARGET, STAT_ACC, 3, Score_Minus5
+  if_stat_level_less_than AI_TARGET, STAT_ACC, 2, Score_Minus5
 	if_stat_level_equal AI_TARGET, STAT_ACC, 0, Score_Minus10
 	get_ability AI_TARGET
 	if_equal ABILITY_KEEN_EYE, Score_Minus10
 	goto CheckIfAbilityBlocksStatChange
 
 AI_CBM_EvasionDown:: @ 81DA0BD
+  if_stat_level_less_than AI_TARGET, STAT_EVASION, 5, Score_Minus3
+  if_stat_level_less_than AI_TARGET, STAT_EVASION, 4, Score_Minus3
+  if_stat_level_less_than AI_TARGET, STAT_EVASION, 3, Score_Minus5
+  if_stat_level_less_than AI_TARGET, STAT_EVASION, 2, Score_Minus5
 	if_stat_level_equal AI_TARGET, STAT_EVASION, 0, Score_Minus10
 
 CheckIfAbilityBlocksStatChange:: @ 81DA0C5
@@ -445,6 +488,9 @@ AI_CBM_Spikes:: @ 81DA27D
 	end
 
 AI_CBM_Foresight:: @ 81DA288
+  if_has_move_with_low_accuracy AI_USER, Score_Plus1
+  if_stat_level_equal AI_USER, STAT_ACC, 5, Score_Plus1
+  if_stat_level_less_than AI_USER, STAT_ACC, 5, Score_Plus1
 	if_status2 AI_TARGET, STATUS2_FORESIGHT, Score_Minus10
 	end
 
@@ -773,6 +819,8 @@ AI_CheckViability:: @ 81DA445
 	if_effect EFFECT_WATER_SPORT, AI_CV_WaterSport
 	if_effect EFFECT_CALM_MIND, AI_CV_SpDefUp
 	if_effect EFFECT_DRAGON_DANCE, AI_CV_DragonDance
+  if_effect EFFECT_THUNDER, AI_CV_Thunder
+  if_effect EFFECT_BLIZZARD, AI_CV_Blizzard
 	end
 
 AI_CV_Sleep:: @ 81DA71C
@@ -1127,7 +1175,7 @@ AI_CV_AlwaysHit_End:: @ 81DAA83
 	end
 
 AI_CV_AttackDown:: @ 81DAA84
-	if_stat_level_equal AI_TARGET, STAT_ATK, 6, AI_CV_AttackDown3
+	if_stat_level_equal AI_TARGET, STAT_ATK, 0, AI_CV_AttackDown3
 	score -1
 	if_hp_more_than AI_USER, 90, AI_CV_AttackDown2
 	score -1
@@ -1150,6 +1198,7 @@ AI_CV_AttackDown4:: @ 81DAAB0
 	score -2
 
 AI_CV_AttackDown_End:: @ 81DAACE
+  score +3
 	end
 
 @ Missing Poison, Flying, and Ghost for unknown reason
@@ -2064,7 +2113,7 @@ AI_CV_Foresight:: @ 81DB3A3
 	if_equal TYPE_GHOST, AI_CV_Foresight2
 	get_user_type2
 	if_equal TYPE_GHOST, AI_CV_Foresight2
-	if_stat_level_more_than AI_USER, STAT_EVASION, 8, AI_CV_Foresight3
+	if_stat_level_more_than AI_TARGET, STAT_EVASION, 8, AI_CV_Foresight3
 	score -2
 	goto AI_CV_Foresight_End
 
@@ -2157,9 +2206,12 @@ AI_CV_Pursuit_End:: @ 81DB4C0
 	end
 
 AI_CV_RainDance:: @ 81DB4C1
+  if_has_move AI_USER, MOVE_THUNDER, Score_Plus3
 	if_user_faster AI_CV_RainDance2
 	get_ability AI_USER
 	if_equal ABILITY_SWIFT_SWIM, AI_CV_RainDance3
+  get_type AI_TARGET
+  if_equal TYPE_FIRE, AI_CV_RainDance3
 
 AI_CV_RainDance2:: @ 81DB4CF
 	if_hp_less_than AI_USER, 40, AI_CV_RainDance_ScoreDown1
@@ -2183,6 +2235,7 @@ AI_CV_RainDance_End:: @ 81DB4FF
 
 AI_CV_SunnyDay:: @ 81DB500
 	if_hp_less_than AI_USER, 40, AI_CV_SunnyDay_ScoreDown1
+  if_type_in_party AI_USER, TYPE_FIRE, Score_Plus2
 	get_weather
 	if_equal AI_WEATHER_HAIL, AI_CV_SunnyDay2
 	if_equal AI_WEATHER_RAIN, AI_CV_SunnyDay2
@@ -2385,6 +2438,7 @@ AI_CV_SpitUp_End:: @ 81DB706
 	end
 
 AI_CV_Hail:: @ 81DB707
+  if_has_move AI_USER, MOVE_BLIZZARD, Score_Plus3
 	if_hp_less_than AI_USER, 40, AI_CV_Hail_ScoreDown1
 	get_weather
 	if_equal AI_WEATHER_SUN, AI_CV_Hail2
@@ -2763,6 +2817,20 @@ AI_CV_DragonDance2:: @ 81DBA66
 
 AI_CV_DragonDance_End:: @ 81DBA6E
 	end
+
+AI_CV_Thunder::
+  get_weather
+  if_not_equal AI_WEATHER_RAIN, AI_CV_ThunderUseRainDanceInstead
+
+AI_CV_ThunderUseRainDanceInstead::
+  if_has_move AI_USER, MOVE_RAIN_DANCE, Score_Minus5
+
+AI_CV_Blizzard::
+  get_weather
+  if_not_equal AI_WEATHER_HAIL, AI_CV_BlizzardUseHailInstead
+
+AI_CV_BlizzardUseHailInstead::
+  if_has_move AI_USER, MOVE_HAIL, Score_Minus5
 
 AI_TryToFaint:: @ 81DBA6F
 	if_can_faint AI_TryToFaint_TryToEncourageQuickAttack

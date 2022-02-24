@@ -10,6 +10,7 @@ PalletTown_PlayersHouse_2F_OnTransition:: @ 8168CAE
 
 PalletTown_PlayersHouse_2F_EventScript_SetRespawn:: @ 8168CBA
 	setrespawn SPAWN_PALLET_TOWN
+	setflag FLAG_SYS_B_DASH
 	return
 
 PalletTown_PlayersHouse_2F_OnWarp:: @ 8168CBE

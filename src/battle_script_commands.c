@@ -689,6 +689,7 @@ static const u8 *const sMoveEffectBS_Ptrs[] =
     [MOVE_EFFECT_REMOVE_PARALYSIS] = BattleScript_MoveEffectSleep,
     [MOVE_EFFECT_ATK_DEF_DOWN] = BattleScript_MoveEffectSleep,
     [MOVE_EFFECT_RECOIL_33] = BattleScript_MoveEffectRecoil,
+    [MOVE_EFFECT_BLIZZARD] = BattleScript_MoveEffectFreeze,
 };
 
 // not used
@@ -1027,8 +1028,13 @@ static bool8 AccuracyCalcHelper(u16 move)
         return TRUE;
     }
     gHitMarker &= ~HITMARKER_IGNORE_UNDERWATER;
-    if ((WEATHER_HAS_EFFECT && (gBattleWeather & WEATHER_RAIN_ANY) && gBattleMoves[move].effect == EFFECT_THUNDER)
-     || (gBattleMoves[move].effect == EFFECT_ALWAYS_HIT || gBattleMoves[move].effect == EFFECT_VITAL_THROW))
+    if ((WEATHER_HAS_EFFECT && (gBattleWeather & WEATHER_RAIN_ANY) && gBattleMoves[move].effect == EFFECT_THUNDER) 
+            || (WEATHER_HAS_EFFECT && (gBattleWeather & WEATHER_HAIL_ANY) && gBattleMoves[move].effect == EFFECT_BLIZZARD)
+            || (gBattleMoves[move].effect == EFFECT_ALWAYS_HIT 
+                || gBattleMoves[move].effect == EFFECT_VITAL_THROW 
+                || gBattleMoves[move].effect == EFFECT_BIDE 
+                || gBattleMoves[move].effect == EFFECT_LOCK_ON
+                || gBattleMoves[move].effect == EFFECT_FORESIGHT))
     {
         JumpIfMoveFailed(7, move);
         return TRUE;
@@ -8116,7 +8122,7 @@ static void atkC1_hiddenpowercalc(void)
               | ((gBattleMons[gBattlerAttacker].speedIV & 1) << 3)
               | ((gBattleMons[gBattlerAttacker].spAttackIV & 1) << 4)
               | ((gBattleMons[gBattlerAttacker].spDefenseIV & 1) << 5);
-    gDynamicBasePower = (40 * powerBits) / 63 + 30;
+//    gDynamicBasePower = (40 * powerBits) / 63 + 30;
     gBattleStruct->dynamicMoveType = (15 * typeBits) / 63 + 1;
     if (gBattleStruct->dynamicMoveType >= TYPE_MYSTERY)
         ++gBattleStruct->dynamicMoveType;

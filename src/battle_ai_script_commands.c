@@ -106,6 +106,8 @@ static void Cmd_if_stat_level_not_equal(void);
 static void Cmd_if_can_faint(void);
 static void Cmd_if_cant_faint(void);
 static void Cmd_if_has_move(void);
+static void Cmd_if_has_move_with_low_accuracy(void);
+static void Cmd_if_type_in_party(void);
 static void Cmd_if_doesnt_have_move(void);
 static void Cmd_if_has_move_with_effect(void);
 static void Cmd_if_doesnt_have_move_with_effect(void);
@@ -240,6 +242,8 @@ static const BattleAICmdFunc sBattleAICmdTable[] =
     Cmd_if_level_compare,                 // 0x5B
     Cmd_if_target_taunted,                // 0x5C
     Cmd_if_target_not_taunted,            // 0x5D
+    Cmd_if_has_move_with_low_accuracy,
+    Cmd_if_type_in_party,
 };
 
 static const u16 sDiscouragedPowerfulMoveEffects[] =
@@ -1560,6 +1564,92 @@ static void Cmd_if_has_move(void)
             sAIScriptPtr = T1_READ_PTR(sAIScriptPtr + 4);
         break;
     }
+}
+
+static void Cmd_if_has_move_with_low_accuracy(void)
+{
+    int i;
+    int numElems;
+    numElems = sizeof(gBattleMons[gBattlerAttacker].moves)/sizeof(gBattleMons[gBattlerAttacker].moves[0]);
+    
+    switch (sAIScriptPtr[1])
+    {
+    case AI_USER:
+    case AI_USER_PARTNER:
+   
+        numElems = sizeof(gBattleMons[gBattlerAttacker].moves)/sizeof(gBattleMons[gBattlerAttacker].moves[0]);
+        for (i = 0; i < numElems; i++)
+        {
+            if (gBattleMoves[gBattleMons[gBattlerAttacker].moves[i]].accuracy <= 90 
+                  && (gBattleMoves[gBattleMons[gBattlerAttacker].moves[i]].effect != EFFECT_ALWAYS_HIT 
+                      && gBattleMoves[gBattleMons[gBattlerAttacker].moves[i]].accuracy > 0))
+            {
+                break;
+            }
+
+        }
+
+        if (i == numElems)
+            sAIScriptPtr += 6;
+        else
+            sAIScriptPtr = T1_READ_PTR(sAIScriptPtr + 2);
+
+        break;
+    case AI_TARGET:
+    case AI_TARGET_PARTNER:
+
+        for (i = 0; i < 8; i++)
+        {
+            if (gBattleMoves[BATTLE_HISTORY->usedMoves[gBattlerTarget >> 1][i]].accuracy < 90
+                  && (gBattleMoves[BATTLE_HISTORY->usedMoves[gBattlerTarget >> 1][i]].effect != EFFECT_ALWAYS_HIT && gBattleMoves[BATTLE_HISTORY->usedMoves[gBattlerTarget >> 1][i]].accuracy > 0))
+                break;
+        }
+        if (i == 8)
+            sAIScriptPtr += 6;
+        else
+            sAIScriptPtr = T1_READ_PTR(sAIScriptPtr + 2);
+
+        break;
+    } 
+}
+
+static void Cmd_if_type_in_party(void)
+{
+    struct Pokemon *party;
+    struct Pokemon *partyPtr;
+    int i;
+    u8 battlerId, typeToCompareTo;
+    
+
+    switch (sAIScriptPtr[1])
+    {
+    case AI_USER:
+        battlerId = gBattlerAttacker;
+        break;
+    default:
+        battlerId = gBattlerTarget;
+        break;
+    }
+
+    party = (GetBattlerSide(battlerId) == B_SIDE_PLAYER) ? gPlayerParty : gEnemyParty;
+
+    typeToCompareTo = T1_READ_32(sAIScriptPtr + 2);
+
+    for (i = 0; i < PARTY_SIZE; i++)
+    {
+        u16 species = GetMonData(&party[i], MON_DATA_SPECIES);
+        u16 hp = GetMonData(&party[i], MON_DATA_HP);
+        u8 type1 = gBaseStats[species].type1;
+        u8 type2 = gBaseStats[species].type2;
+
+        if (species != SPECIES_NONE && species != SPECIES_EGG && hp != 0 && (type1 == typeToCompareTo || type2 == typeToCompareTo))
+        {
+            sAIScriptPtr = T1_READ_PTR(sAIScriptPtr + 3);
+            return;
+        }
+    }
+
+    sAIScriptPtr += 7;
 }
 
 static void Cmd_if_doesnt_have_move(void)

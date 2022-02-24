@@ -553,6 +553,19 @@
 	.4byte \ptr
 	.endm
 
+	.macro if_has_move_with_low_accuracy battler:req, ptr:req
+	.byte 0x5e
+	.byte \battler
+	.4byte \ptr
+	.endm
+
+	.macro if_type_in_party battler:req, type:req, ptr:req
+	.byte 0x5f
+	.byte \battler
+	.byte \type
+	.4byte \ptr
+	.endm
+
 @ useful script macros
 	.macro get_curr_move_type
 	get_type AI_TYPE_MOVE
@@ -599,3 +612,5 @@
 	.macro if_any_move_encored battler:req, ptr:req
 	if_any_move_disabled_or_encored \battler, 1, \ptr
 	.endm
+	
+
