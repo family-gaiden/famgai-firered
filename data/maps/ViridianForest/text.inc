@@ -103,3 +103,6 @@ ViridianForest_Text_LeavingViridianForest:: @ 8172773
     .string "LEAVING VIRIDIAN FOREST\n"
     .string "PEWTER CITY AHEAD$"
 
+ViridianForest_Text_SignTest::
+	.string "Testing out signs and maps\n"
+	.string "Bababooey.$"

@@ -34,6 +34,10 @@ ViridianForest_EventScript_TrainerTips5:: @ 816055F
 	msgbox ViridianForest_Text_WeakenMonsBeforeCapture, MSGBOX_SIGN
 	end
 
+ViridianForest_EventScript_TrainerTips6:: @ 816055F
+	msgbox ViridianForest_Text_SignTest, MSGBOX_SIGN
+	end
+
 ViridianForest_EventScript_ExitSign:: @ 8160568
 	msgbox ViridianForest_Text_LeavingViridianForest, MSGBOX_SIGN
 	end
