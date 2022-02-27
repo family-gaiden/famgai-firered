@@ -4,6 +4,17 @@
 #include "global.h"
 #include "constants/field_weather.h"
 
+#define TAG_WEATHER_START 0x1200
+enum {
+    GFXTAG_CLOUD = TAG_WEATHER_START,
+    GFXTAG_RAIN,
+};
+
+enum {
+    PALTAG_WEATHER = TAG_WEATHER_START,
+    PALTAG_WEATHER_2
+};
+
 struct Weather
 {
     union
@@ -54,6 +65,7 @@ struct Weather
     u8 rainStrength;
     bool8 cloudSpritesCreated;
     u16 snowflakeVisibleCounter;
+    u16 snowflakeTimer;
     u16 unknown_6E2;
     u8 snowflakeSpriteCount;
     u8 targetSnowflakeSpriteCount;
