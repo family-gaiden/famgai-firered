@@ -11,6 +11,24 @@
 #include "task.h"
 #include "trig.h"
 
+
+// EWRAM
+EWRAM_DATA static u8 gCurrentAbnormalWeather = 0;
+EWRAM_DATA static u16 gUnusedWeatherRelated = 0;
+
+
+// CONST
+const u8 gWeatherFogDiagonalTiles[] = INCBIN_U8("graphics/weather/fog_diagonal.4bpp");
+const u8 gWeatherFogHorizontalTiles[] = INCBIN_U8("graphics/weather/fog_horizontal.4bpp");
+const u8 gWeatherCloudTiles[] = INCBIN_U8("graphics/weather/cloud.4bpp");
+const u8 gWeatherSnow1Tiles[] = INCBIN_U8("graphics/weather/snow0.4bpp");
+const u8 gWeatherSnow2Tiles[] = INCBIN_U8("graphics/weather/snow1.4bpp");
+const u8 gWeatherBubbleTiles[] = INCBIN_U8("graphics/weather/bubble.4bpp");
+const u8 gWeatherAshTiles[] = INCBIN_U8("graphics/weather/ash.4bpp");
+const u8 gWeatherRainTiles[] = INCBIN_U8("graphics/weather/rain.4bpp");
+const u8 gWeatherSandstormTiles[] = INCBIN_U8("graphics/weather/sandstorm.4bpp");
+
+
 //------------------------------------------------------------------------------
 // WEATHER_SUNNY_CLOUDS
 //------------------------------------------------------------------------------
@@ -737,7 +755,7 @@ void Snow_InitVars(void)
     gWeatherPtr->weatherGfxLoaded = FALSE;
     gWeatherPtr->gammaTargetIndex = 3;
     gWeatherPtr->gammaStepDelay = 20;
-    gWeatherPtr->targetSnowflakeSpriteCount = 16;
+    gWeatherPtr->targetSnowflakeSpriteCount = 24;
     gWeatherPtr->snowflakeVisibleCounter = 0;
 }
 
@@ -746,7 +764,7 @@ void Snow_InitAll(void)
     u16 i;
 
     Snow_InitVars();
-    while (!gWeatherPtr->weatherGfxLoaded)
+    while (gWeatherPtr->weatherGfxLoaded == FALSE)
     {
         Snow_Main();
         for (i = 0; i < gWeatherPtr->snowflakeSpriteCount; i++)
@@ -801,11 +819,12 @@ static bool8 UpdateVisibleSnowflakeSprites(void)
     return gWeatherPtr->snowflakeSpriteCount != gWeatherPtr->targetSnowflakeSpriteCount;
 }
 
-static const struct OamData sSnowflakeSpriteOamData = {
+static const struct OamData sSnowflakeSpriteOamData =
+{
     .y = 0,
     .affineMode = ST_OAM_AFFINE_OFF,
     .objMode = ST_OAM_OBJ_NORMAL,
-    .mosaic = FALSE,
+    .mosaic = 0,
     .bpp = ST_OAM_4BPP,
     .shape = SPRITE_SHAPE(8x8),
     .x = 0,
@@ -817,29 +836,34 @@ static const struct OamData sSnowflakeSpriteOamData = {
     .affineParam = 0,
 };
 
-static const struct SpriteFrameImage sSnowflakeSpriteImages[] = {
-    {gWeatherSnow1Tiles, 0x20},
-    {gWeatherSnow2Tiles, 0x20},
+static const struct SpriteFrameImage sSnowflakeSpriteImages[] =
+{
+    {gWeatherSnow1Tiles, sizeof(gWeatherSnow1Tiles)},
+    {gWeatherSnow2Tiles, sizeof(gWeatherSnow2Tiles)},
 };
 
-static const union AnimCmd sSnowflakeAnimCmd0[] = {
+static const union AnimCmd sSnowflakeAnimCmd0[] =
+{
     ANIMCMD_FRAME(0, 16),
     ANIMCMD_END,
 };
 
-static const union AnimCmd sSnowflakeAnimCmd1[] = {
+static const union AnimCmd sSnowflakeAnimCmd1[] =
+{
     ANIMCMD_FRAME(1, 16),
     ANIMCMD_END,
 };
 
-static const union AnimCmd *const sSnowflakeAnimCmds[] = {
+static const union AnimCmd *const sSnowflakeAnimCmds[] =
+{
     sSnowflakeAnimCmd0,
     sSnowflakeAnimCmd1,
 };
 
-static const struct SpriteTemplate sSnowflakeSpriteTemplate = {
-    .tileTag = 0xFFFF,
-    .paletteTag = 0x1200,
+static const struct SpriteTemplate sSnowflakeSpriteTemplate =
+{
+    .tileTag = SPRITE_INVALID_TAG,
+    .paletteTag = PALTAG_WEATHER,
     .oam = &sSnowflakeSpriteOamData,
     .anims = sSnowflakeAnimCmds,
     .images = sSnowflakeSpriteImages,
@@ -884,31 +908,41 @@ static void InitSnowflakeSpriteMovement(struct Sprite *sprite)
 {
     u16 rand;
     u16 x = ((sprite->tSnowflakeId * 5) & 7) * 30 + (Random() % 30);
-
-    sprite->y = -3 - (gSpriteCoordOffsetY + sprite->centerToCornerVecY);
+		u8 duration_var = Random() % 100;
+		
+    rand = Random();
+    
+		sprite->y = -3 + (5 * (rand % 20)) - (gSpriteCoordOffsetY + sprite->centerToCornerVecY);
     sprite->x = x - (gSpriteCoordOffsetX + sprite->centerToCornerVecX);
     sprite->tPosY = sprite->y * 128;
     sprite->x2 = 0;
-    rand = Random();
     sprite->tDeltaY = (rand & 3) * 5 + 64;
     sprite->tDeltaY2 = sprite->tDeltaY;
     StartSpriteAnim(sprite, (rand & 1) ? 0 : 1);
     sprite->tWaveIndex = 0;
     sprite->tWaveDelta = ((rand & 3) == 0) ? 2 : 1;
-    sprite->tFallDuration = (rand & 0x1F) + 210;
+    sprite->tFallDuration = (rand & 0x1F) + duration_var + 125;
     sprite->tFallCounter = 0;
 }
 
 static void WaitSnowflakeSprite(struct Sprite *sprite)
 {
-    if (gWeatherPtr->unknown_6E2 > 18)
+    u16 rand;
+		rand = Random();
+
+		// Timer is never incremented
+		// EDIT: now it is lmao
+    if (gWeatherPtr->snowflakeTimer > 5 + (rand % 10))
     {
         sprite->invisible = FALSE;
         sprite->callback = UpdateSnowflakeSprite;
-        sprite->y = 250 - (gSpriteCoordOffsetY + sprite->centerToCornerVecY);
+        sprite->y = rand % 250 - (gSpriteCoordOffsetY + sprite->centerToCornerVecY);
         sprite->tPosY = sprite->y * 128;
-        gWeatherPtr->unknown_6E2 = 0;
+        gWeatherPtr->snowflakeTimer = 0;
     }
+		else{
+			gWeatherPtr->snowflakeTimer++;
+		}
 }
 
 static void UpdateSnowflakeSprite(struct Sprite *sprite)
@@ -932,7 +966,14 @@ static void UpdateSnowflakeSprite(struct Sprite *sprite)
         sprite->x = -3 - (gSpriteCoordOffsetX + sprite->centerToCornerVecX);
 
     y = (sprite->y + sprite->centerToCornerVecY + gSpriteCoordOffsetY) & 0xFF;
-    if (y > 163 && y < 171)
+		if (y < -3){
+        sprite->y = 200 - (gSpriteCoordOffsetY + sprite->centerToCornerVecY);
+        sprite->tPosY = sprite->y * 128;
+        sprite->tFallDuration = 220;
+        sprite->invisible = TRUE;
+        sprite->callback = WaitSnowflakeSprite;	
+		}
+		else if (y > 163 && y < 171)
     {
         sprite->y = 250 - (gSpriteCoordOffsetY + sprite->centerToCornerVecY);
         sprite->tPosY = sprite->y * 128;
