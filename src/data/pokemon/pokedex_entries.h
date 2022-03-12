@@ -5030,4 +5030,43 @@ const struct PokedexEntry gPokedexEntries[] =
         .trainerScale = 337,
         .trainerOffset = 2,
     },
+    
+		[NATIONAL_DEX_BUDEW] =
+    {
+        .categoryName = _("THORN"),
+        .height = 2,
+        .weight = 12,
+        .description = gBudewPokedexText,
+        .unusedDescription = gBudewPokedexTextUnused,
+        .pokemonScale = 282,
+        .pokemonOffset = -1,
+        .trainerScale = 272,
+        .trainerOffset = -2,
+    },
+		
+		[NATIONAL_DEX_ROSERADE] =
+    {
+        .categoryName = _("THORN"),
+        .height = 2,
+        .weight = 12,
+        .description = gRoseradePokedexText,
+        .unusedDescription = gRoseradePokedexTextUnused,
+        .pokemonScale = 282,
+        .pokemonOffset = -1,
+        .trainerScale = 272,
+        .trainerOffset = -2,
+    },
+
+		[NATIONAL_DEX_BONSLY] =
+    {
+        .categoryName = _("BONSAI"),
+        .height = 2,
+        .weight = 12,
+        .description = gBonslyPokedexText,
+        .unusedDescription = gBonslyPokedexTextUnused,
+        .pokemonScale = 282,
+        .pokemonOffset = -1,
+        .trainerScale = 272,
+        .trainerOffset = -2,
+    },
 };

@@ -251,7 +251,7 @@ static const struct PokemonJumpMons
     { .species = SPECIES_WYNAUT,     .unk2 = 0, },
     { .species = SPECIES_SNORUNT,    .unk2 = 0, },
     { .species = SPECIES_CLAMPERL,   .unk2 = 1, },
-    { .species = SPECIES_BAGON,      .unk2 = 1, },
+    { .species = SPECIES_BUDEW,      .unk2 = 1, },
 };
 
 void StartPokemonJump(u16 partyIndex, MainCallback callback)

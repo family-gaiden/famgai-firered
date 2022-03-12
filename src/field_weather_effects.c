@@ -754,7 +754,7 @@ void Snow_InitVars(void)
     gWeatherPtr->initStep = 0;
     gWeatherPtr->weatherGfxLoaded = FALSE;
     gWeatherPtr->gammaTargetIndex = 3;
-    gWeatherPtr->gammaStepDelay = 20;
+    gWeatherPtr->gammaStepDelay = 10;
     gWeatherPtr->targetSnowflakeSpriteCount = 24;
     gWeatherPtr->snowflakeVisibleCounter = 0;
 }
@@ -807,13 +807,21 @@ static bool8 UpdateVisibleSnowflakeSprites(void)
     if (gWeatherPtr->snowflakeSpriteCount == gWeatherPtr->targetSnowflakeSpriteCount)
         return FALSE;
 
-    if (++gWeatherPtr->snowflakeVisibleCounter > 36)
+    if (++gWeatherPtr->snowflakeVisibleCounter > 24 || gWeatherPtr->targetSnowflakeSpriteCount == 0)
     {
         gWeatherPtr->snowflakeVisibleCounter = 0;
         if (gWeatherPtr->snowflakeSpriteCount < gWeatherPtr->targetSnowflakeSpriteCount)
             CreateSnowflakeSprite();
-        else
-            DestroySnowflakeSprite();
+        else {
+						if(gWeatherPtr->targetSnowflakeSpriteCount == 0){
+							if(Random() % 4 == 0){
+            		DestroySnowflakeSprite();
+							}
+						}
+						else{
+							DestroySnowflakeSprite();
+						}
+				}
     }
 
     return gWeatherPtr->snowflakeSpriteCount != gWeatherPtr->targetSnowflakeSpriteCount;
@@ -890,6 +898,7 @@ static bool8 CreateSnowflakeSprite(void)
     InitSnowflakeSpriteMovement(&gSprites[spriteId]);
     gSprites[spriteId].coordOffsetEnabled = TRUE;
     gWeatherPtr->sprites.s1.snowflakeSprites[gWeatherPtr->snowflakeSpriteCount++] = &gSprites[spriteId];
+		gWeatherPtr->sprites.s1.snowflakeSprites[gWeatherPtr->snowflakeSpriteCount]->x = ((gSprites[spriteId].tSnowflakeId * 5) & 7) * 30 + (Random() % 30);
     return TRUE;
 }
 
@@ -908,10 +917,13 @@ static void InitSnowflakeSpriteMovement(struct Sprite *sprite)
 {
     u16 rand;
     u16 x = ((sprite->tSnowflakeId * 5) & 7) * 30 + (Random() % 30);
-		u8 duration_var = Random() % 100;
-		
+		u8 duration = Random() % 80 + 100;	
     rand = Random();
-    
+   
+		if(gWeatherPtr->targetSnowflakeSpriteCount == 0){
+			duration /= 10;
+		}
+ 
 		sprite->y = -3 + (5 * (rand % 20)) - (gSpriteCoordOffsetY + sprite->centerToCornerVecY);
     sprite->x = x - (gSpriteCoordOffsetX + sprite->centerToCornerVecX);
     sprite->tPosY = sprite->y * 128;
@@ -921,7 +933,7 @@ static void InitSnowflakeSpriteMovement(struct Sprite *sprite)
     StartSpriteAnim(sprite, (rand & 1) ? 0 : 1);
     sprite->tWaveIndex = 0;
     sprite->tWaveDelta = ((rand & 3) == 0) ? 2 : 1;
-    sprite->tFallDuration = (rand & 0x1F) + duration_var + 125;
+    sprite->tFallDuration = (rand & 0x1F) + duration;
     sprite->tFallCounter = 0;
 }
 
@@ -932,16 +944,16 @@ static void WaitSnowflakeSprite(struct Sprite *sprite)
 
 		// Timer is never incremented
 		// EDIT: now it is lmao
-    if (gWeatherPtr->snowflakeTimer > 5 + (rand % 10))
+    if (gWeatherPtr->snowflakeTimer == 0)
     {
         sprite->invisible = FALSE;
         sprite->callback = UpdateSnowflakeSprite;
         sprite->y = rand % 250 - (gSpriteCoordOffsetY + sprite->centerToCornerVecY);
         sprite->tPosY = sprite->y * 128;
-        gWeatherPtr->snowflakeTimer = 0;
+        gWeatherPtr->snowflakeTimer = 5 + (rand % 10);
     }
 		else{
-			gWeatherPtr->snowflakeTimer++;
+			gWeatherPtr->snowflakeTimer--;
 		}
 }
 
@@ -978,24 +990,26 @@ static void UpdateSnowflakeSprite(struct Sprite *sprite)
         sprite->y = 250 - (gSpriteCoordOffsetY + sprite->centerToCornerVecY);
         sprite->tPosY = sprite->y * 128;
         sprite->tFallCounter = 0;
-        sprite->tFallDuration = 220;
+        sprite->tFallDuration = 150;
     }
     else if (y > 242 && y < 250)
     {
         sprite->y = 163;
         sprite->tPosY = sprite->y * 128;
         sprite->tFallCounter = 0;
-        sprite->tFallDuration = 220;
+        sprite->tFallDuration = 150;
         sprite->invisible = TRUE;
         sprite->callback = WaitSnowflakeSprite;
     }
 
-    if (++sprite->tFallCounter == sprite->tFallDuration)
+    if (++sprite->tFallCounter >= sprite->tFallDuration)
     {
         InitSnowflakeSpriteMovement(sprite);
         sprite->y = 250;
         sprite->invisible = TRUE;
-        sprite->callback = WaitSnowflakeSprite;
+				if(gWeatherPtr->targetSnowflakeSpriteCount > 0){
+       	 		sprite->callback = WaitSnowflakeSprite;
+				}
     }
 }
 

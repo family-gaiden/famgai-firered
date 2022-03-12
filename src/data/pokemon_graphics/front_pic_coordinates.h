@@ -2060,6 +2060,21 @@ const struct MonCoords gMonFrontPicCoords[] =
         .size = 0x37,
         .y_offset = 0x06,
     },
+    [SPECIES_BUDEW] =
+    {
+        .size = 0x76,
+        .y_offset = 0x08,
+    },
+    [SPECIES_ROSERADE] =
+    {
+        .size = 0x87,
+        .y_offset = 0x04,
+    },
+    [SPECIES_BONSLY] =
+    {
+        .size = 0x87,
+        .y_offset = 0x01,
+    },
     [SPECIES_EGG] =
     {
         .size = 0x33,

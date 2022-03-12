@@ -294,5 +294,6 @@
 // gTileset_ViridianForest
 #define METATILE_ViridianForest_HugeTreeTopMiddle_Grass  0x284
 #define METATILE_ViridianForest_HugeTreeTopMiddle_Mowed  0x281
+#define METATILE_ViridianForest_Plain_Grass              0x286
 
 #endif // GUARD_METATILE_LABELS_H

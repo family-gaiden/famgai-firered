@@ -830,7 +830,7 @@ static const struct PickupItem sPickupItems[] =
     { ITEM_RAWST_BERRY, 55 },
     { ITEM_ASPEAR_BERRY, 65 },
     { ITEM_PERSIM_BERRY, 75 },
-    { ITEM_TM10, 80 },
+    { ITEM_ETHER, 80 },
     { ITEM_PP_UP, 85 },
     { ITEM_RARE_CANDY, 90 },
     { ITEM_NUGGET, 95 },
@@ -1034,7 +1034,8 @@ static bool8 AccuracyCalcHelper(u16 move)
                 || gBattleMoves[move].effect == EFFECT_VITAL_THROW 
                 || gBattleMoves[move].effect == EFFECT_BIDE 
                 || gBattleMoves[move].effect == EFFECT_LOCK_ON
-                || gBattleMoves[move].effect == EFFECT_FORESIGHT))
+                || gBattleMoves[move].effect == EFFECT_FORESIGHT)
+						|| gBattleMons[gBattlerAttacker].status2 & STATUS2_FORESIGHT)
     {
         JumpIfMoveFailed(7, move);
         return TRUE;
@@ -6390,6 +6391,9 @@ static void atk87_stockpiletohpheal(void)
 static void atk88_negativedamage(void)
 {
     gBattleMoveDamage = -(gHpDealt / 2);
+		if(gBattleMoves[gCurrentMove].effect == EFFECT_DRAIN_KISS){
+			gBattleMoveDamage = -((gHpDealt / 4) * 3);
+		}
     if (gBattleMoveDamage == 0)
         gBattleMoveDamage = -1;
     ++gBattlescriptCurrInstr;

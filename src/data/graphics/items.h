@@ -179,6 +179,9 @@ const u32 gFile_graphics_items_icon_palettes_water_stone_palette[] = INCBIN_U32(
 const u32 gFile_graphics_items_icons_leaf_stone_sheet[] = INCBIN_U32("graphics/items/icons/leaf_stone.4bpp.lz");
 const u32 gFile_graphics_items_icon_palettes_leaf_stone_palette[] = INCBIN_U32("graphics/items/icon_palettes/leaf_stone.gbapal.lz");
 
+const u32 gFile_graphics_items_icons_shiny_stone_sheet[] = INCBIN_U32("graphics/items/icons/shiny_stone.4bpp.lz");
+const u32 gFile_graphics_items_icon_palettes_shiny_stone_palette[] = INCBIN_U32("graphics/items/icon_palettes/shiny_stone.gbapal.lz");
+
 const u32 gFile_graphics_items_icons_tiny_mushroom_sheet[] = INCBIN_U32("graphics/items/icons/tiny_mushroom.4bpp.lz");
 const u32 gFile_graphics_items_icons_big_mushroom_sheet[] = INCBIN_U32("graphics/items/icons/big_mushroom.4bpp.lz");
 const u32 gFile_graphics_items_icon_palettes_mushroom_palette[] = INCBIN_U32("graphics/items/icon_palettes/mushroom.gbapal.lz");

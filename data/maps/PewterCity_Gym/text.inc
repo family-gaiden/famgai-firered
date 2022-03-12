@@ -79,6 +79,19 @@ PewterCity_Gym_Text_LiamPostBattle:: @ 819126B
     .string "You're pretty hot.\n"
     .string "…But not as hot as BROCK!$"
 
+PewterCity_Gym_Text_ScottyIntro:: @ 81911EC
+    .string "I'm training to defeat Brock\n"
+    .string "too! Let's see who's best!$"
+
+PewterCity_Gym_Text_ScottyDefeat:: @ 8191237
+    .string "You're kidding me. You beat\n"
+    .string "me?\p"
+    .string "Go face Brock! Prove yourself$"
+
+PewterCity_Gym_Text_ScottyPostBattle:: @ 819126B
+    .string "I admit, I'm impressed.\p"
+    .string "I'm sure you'll take him down!$"
+
 PewterCity_Gym_Text_LetMeTakeYouToTheTop:: @ 8191298
     .string "Hiya!\n"
     .string "Do you want to dream big?\p"

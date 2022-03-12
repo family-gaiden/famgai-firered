@@ -262,6 +262,7 @@ void AnimSpitUpOrb(struct Sprite *);
 void AnimEyeSparkle(struct Sprite *);
 void AnimAngel(struct Sprite *);
 void AnimPinkHeart(struct Sprite *);
+void AnimPinkHeartAbsorption(struct Sprite*);
 void AnimDevil(struct Sprite *);
 void AnimFurySwipes(struct Sprite *);
 void AnimMovementWaves(struct Sprite *);

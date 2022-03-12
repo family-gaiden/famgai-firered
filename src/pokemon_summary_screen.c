@@ -138,6 +138,7 @@ static void PokeSum_DestroyMonMarkingsSprite(void);
 static void PokeSum_UpdateMonMarkingsAnim(void);
 static s8 SeekToNextMonInSingleParty(s8 direction);
 static s8 SeekToNextMonInMultiParty(s8 direction);
+static u8 GetNatureEffectOnSkill(u8 nature, u8 skill); 
 
 struct PokemonSummaryScreenData
 {
@@ -914,6 +915,8 @@ static const u8 sLevelNickTextColors[][3] =
     {0, 5, 4},
     {0, 2, 3},
     {0, 11, 10},
+    {0, 1, 10},
+    {0, 7, 10},
 };
 
 static const u8 ALIGNED(4) sMultiBattlePartyOrder[] =
@@ -2498,14 +2501,112 @@ static void PrintInfoPage(void)
 
 static void PrintSkillsPage(void)
 {
+//Color 6 = RED
+//Color 7 = BLUE
     AddTextPrinterParameterized3(sMonSummaryScreen->windowIds[POKESUM_WIN_RIGHT_PANE], 2, 14 + sMonSkillsPrinterXpos->curHpStr, 4, sLevelNickTextColors[0], TEXT_SPEED_FF, sMonSummaryScreen->summary.curHpStrBuf);
-    AddTextPrinterParameterized3(sMonSummaryScreen->windowIds[POKESUM_WIN_RIGHT_PANE], 2, 50 + sMonSkillsPrinterXpos->atkStr, 22, sLevelNickTextColors[0], TEXT_SPEED_FF, sMonSummaryScreen->summary.statValueStrBufs[PSS_STAT_ATK]);
-    AddTextPrinterParameterized3(sMonSummaryScreen->windowIds[POKESUM_WIN_RIGHT_PANE], 2, 50 + sMonSkillsPrinterXpos->defStr, 35, sLevelNickTextColors[0], TEXT_SPEED_FF, sMonSummaryScreen->summary.statValueStrBufs[PSS_STAT_DEF]);
-    AddTextPrinterParameterized3(sMonSummaryScreen->windowIds[POKESUM_WIN_RIGHT_PANE], 2, 50 + sMonSkillsPrinterXpos->spAStr, 48, sLevelNickTextColors[0], TEXT_SPEED_FF, sMonSummaryScreen->summary.statValueStrBufs[PSS_STAT_SPA]);
-    AddTextPrinterParameterized3(sMonSummaryScreen->windowIds[POKESUM_WIN_RIGHT_PANE], 2, 50 + sMonSkillsPrinterXpos->spDStr, 61, sLevelNickTextColors[0], TEXT_SPEED_FF, sMonSummaryScreen->summary.statValueStrBufs[PSS_STAT_SPD]);
-    AddTextPrinterParameterized3(sMonSummaryScreen->windowIds[POKESUM_WIN_RIGHT_PANE], 2, 50 + sMonSkillsPrinterXpos->speStr, 74, sLevelNickTextColors[0], TEXT_SPEED_FF, sMonSummaryScreen->summary.statValueStrBufs[PSS_STAT_SPE]);
+
+    AddTextPrinterParameterized3(sMonSummaryScreen->windowIds[POKESUM_WIN_RIGHT_PANE], 2, 50 + sMonSkillsPrinterXpos->atkStr, 22, sLevelNickTextColors[GetNatureEffectOnSkill(GetNature(&sMonSummaryScreen->currentMon), 1)], TEXT_SPEED_FF, sMonSummaryScreen->summary.statValueStrBufs[PSS_STAT_ATK]);
+
+    AddTextPrinterParameterized3(sMonSummaryScreen->windowIds[POKESUM_WIN_RIGHT_PANE], 2, 50 + sMonSkillsPrinterXpos->defStr, 35, sLevelNickTextColors[GetNatureEffectOnSkill(GetNature(&sMonSummaryScreen->currentMon), 2)], TEXT_SPEED_FF, sMonSummaryScreen->summary.statValueStrBufs[PSS_STAT_DEF]);
+
+    AddTextPrinterParameterized3(sMonSummaryScreen->windowIds[POKESUM_WIN_RIGHT_PANE], 2, 50 + sMonSkillsPrinterXpos->spAStr, 48, sLevelNickTextColors[GetNatureEffectOnSkill(GetNature(&sMonSummaryScreen->currentMon), 3)], TEXT_SPEED_FF, sMonSummaryScreen->summary.statValueStrBufs[PSS_STAT_SPA]);
+
+    AddTextPrinterParameterized3(sMonSummaryScreen->windowIds[POKESUM_WIN_RIGHT_PANE], 2, 50 + sMonSkillsPrinterXpos->spDStr, 61, sLevelNickTextColors[GetNatureEffectOnSkill(GetNature(&sMonSummaryScreen->currentMon), 4)], TEXT_SPEED_FF, sMonSummaryScreen->summary.statValueStrBufs[PSS_STAT_SPD]);
+
+    AddTextPrinterParameterized3(sMonSummaryScreen->windowIds[POKESUM_WIN_RIGHT_PANE], 2, 50 + sMonSkillsPrinterXpos->speStr, 74, sLevelNickTextColors[GetNatureEffectOnSkill(GetNature(&sMonSummaryScreen->currentMon), 5)], TEXT_SPEED_FF, sMonSummaryScreen->summary.statValueStrBufs[PSS_STAT_SPE]);
+
     AddTextPrinterParameterized3(sMonSummaryScreen->windowIds[POKESUM_WIN_RIGHT_PANE], 2, 15 + sMonSkillsPrinterXpos->expStr, 87, sLevelNickTextColors[0], TEXT_SPEED_FF, sMonSummaryScreen->summary.expPointsStrBuf);
+
     AddTextPrinterParameterized3(sMonSummaryScreen->windowIds[POKESUM_WIN_RIGHT_PANE], 2, 15 + sMonSkillsPrinterXpos->toNextLevel, 100, sLevelNickTextColors[0], TEXT_SPEED_FF, sMonSummaryScreen->summary.expToNextLevelStrBuf);
+}
+
+static u8 GetNatureEffectOnSkill(u8 nature, u8 skill){
+		u8 effect = 0;
+
+		switch(skill){
+				case 1: // ATK
+						if(nature == 1 			// Lonely
+								|| nature == 2 	// Brave
+								|| nature == 3 	// Adamant
+								|| nature == 4 	// Naughty
+						){
+								effect = 6;
+						}
+						else if(nature == 5 // Bold
+								|| nature == 10 // Timid
+								|| nature == 15 // Modest
+								|| nature == 20 // Calm
+						){
+								effect = 7;
+						}
+						break;
+				case 2: // DEF
+						if(nature == 5 			// Bold
+								|| nature == 7 	// Relaxed
+								|| nature == 8 	// Impish
+								|| nature == 9 	// Lax
+						){
+								effect = 6;
+						}
+						else if(nature == 1 // Lonely
+								|| nature == 11 // Hasty
+								|| nature == 16 // Mild
+								|| nature == 21 // Gentle
+						){
+								effect = 7;
+						}
+						break;
+				case 3: // SPATK
+						if(nature == 15 			// Modest
+								|| nature == 16 	// Mild
+								|| nature == 17 	// Quiet
+								|| nature == 19 	// Rash
+						){
+								effect = 6;
+						}
+						else if(nature == 3 	// Adamant
+								|| nature == 8 		// Impish
+								|| nature == 13 	// Jolly
+								|| nature == 23 	// Careful
+						){
+								effect = 7;
+						}
+						break;
+				case 4: // SPDEF
+						if(nature == 20 			// Calm
+								|| nature == 21 	// Gentle
+								|| nature == 22 	// Sassy
+								|| nature == 23 	// Careful
+						){
+								effect = 6;
+						}
+						else if(nature == 4 	// Naughty
+								|| nature == 9 		// Lax
+								|| nature == 14 	// Naive
+								|| nature == 19 	// Rash
+						){
+								effect = 7;
+						}
+						break;
+				case 5: // SPD
+						if(nature == 10 			// Timid
+								|| nature == 11 	// Hasty
+								|| nature == 13 	// Jolly
+								|| nature == 14 	// Naive
+						){
+								effect = 6;
+						}
+						else if(nature == 2 	// Brave
+								|| nature == 7 		// Relaxed
+								|| nature == 17 	// Quiet
+								|| nature == 22 	// Sassy
+						){
+								effect = 7;
+						}
+						break;
+		}
+
+		return effect;
 }
 
 #define GetMoveNamePrinterYpos(x) ((x) * 28 + 5)
@@ -3363,10 +3464,11 @@ static void PokeSum_PrintMonTypeIcons(void)
         if (!sMonSummaryScreen->isEgg)
         {
             BlitMoveInfoIcon(sMonSummaryScreen->windowIds[POKESUM_WIN_RIGHT_PANE], sMonSummaryScreen->monTypes[0] + 1, 47, 35);
-
             if (sMonSummaryScreen->monTypes[0] != sMonSummaryScreen->monTypes[1])
-                BlitMoveInfoIcon(sMonSummaryScreen->windowIds[POKESUM_WIN_RIGHT_PANE], sMonSummaryScreen->monTypes[1] + 1, 83, 35);
-        }
+        		{    
+				    		BlitMoveInfoIcon(sMonSummaryScreen->windowIds[POKESUM_WIN_RIGHT_PANE], sMonSummaryScreen->monTypes[1] + 1, 83, 35);
+						}
+				}
         break;
     case PSS_PAGE_SKILLS:
         break;

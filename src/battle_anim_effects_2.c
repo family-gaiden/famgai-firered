@@ -58,7 +58,7 @@ static void UproarDistortion_Step(u8);
 static void AnimJaggedMusicNote_Step(struct Sprite *);
 static void AnimPerishSongMusicNote_Step1(struct Sprite *);
 static void AnimPerishSongMusicNote_Step2(struct Sprite *);
-
+static void AnimPinkHeartAbsorptionStep(struct Sprite*);
 // Data
 // Unused
 static const struct SpriteTemplate sUnknown_83E3ADC =
@@ -1014,6 +1014,39 @@ const struct SpriteTemplate gPinkHeartSpriteTemplate =
     .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimPinkHeart,
 };
+
+const struct SpriteTemplate gPinkHeartAbsorptionSpriteTemplate =    
+{
+    .tileTag = ANIM_TAG_PINK_HEART,
+    .paletteTag = ANIM_TAG_PINK_HEART,
+    .oam = &gOamData_AffineOff_ObjNormal_16x16,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = AnimPinkHeartAbsorption,
+};
+
+// Moves an orb from the target mon to the attacking mon in an arc-like fashion.
+// arg 0: initial x pixel offset
+// arg 1: initial y pixel offset
+// arg 2: wave amplitude
+// arg 3: wave period (lower means faster wave)
+void AnimPinkHeartAbsorption(struct Sprite* sprite)
+{
+    InitSpritePosToAnimTarget(sprite, TRUE);
+    sprite->data[0] = gBattleAnimArgs[3];
+    sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X_2);
+    sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_Y_PIC_OFFSET);
+    sprite->data[5] = gBattleAnimArgs[2];
+    InitAnimArcTranslation(sprite);
+    sprite->callback = AnimPinkHeartAbsorptionStep;
+}
+
+static void AnimPinkHeartAbsorptionStep(struct Sprite* sprite)
+{
+    if (TranslateAnimHorizontalArc(sprite))
+        DestroyAnimSprite(sprite);
+}
 
 static const union AnimCmd sDevilAnimCmds1[] =
 {

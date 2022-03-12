@@ -12,6 +12,7 @@ EventScript_SetGymTrainers:: @ 81A6B18
 
 EventScript_SetPewterGymTrainers:: @ 81A6B76
 	settrainerflag TRAINER_CAMPER_LIAM
+	settrainerflag TRAINER_YOUNGSTER_SCOTTY
 	return
 
 EventScript_SetCeruleanGymTrainers:: @ 81A6B7A

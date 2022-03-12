@@ -565,6 +565,12 @@
 	.byte \type
 	.4byte \ptr
 	.endm
+	
+	.macro if_has_physical_move battler:req, ptr:req
+	.byte 0x60
+	.byte \battler
+	.4byte \ptr
+	.endm
 
 @ useful script macros
 	.macro get_curr_move_type

@@ -286,6 +286,8 @@
 #define MOVE_EFFECT_NOTHING_3F          0x3F
 #define MOVE_EFFECT_AFFECTS_USER        0x40
 #define MOVE_EFFECT_BLIZZARD            0x41
+#define MOVE_EFFECT_DRAIN_KISS          0x42
+#define MOVE_EFFECT_HONE_CLAWS          0x43
 #define MOVE_EFFECT_CERTAIN             0x80
 
 // Battle terrain defines for gBattleTerrain.

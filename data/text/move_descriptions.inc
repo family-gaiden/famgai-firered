@@ -1060,3 +1060,5 @@ gMoveDescription_DoomDesire:: @ 848865A
 gMoveDescription_PsychoBoost:: @ 84886A1
 	.string "An intense attack\nthat also sharply\nreduces the user's\nSP. ATK stat.$"
 
+gMoveDescription_DrainKiss::
+	.string "A life-sapping kiss\nthat restores over\nhalf of the damage\ndealt.$"

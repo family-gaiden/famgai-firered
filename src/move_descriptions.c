@@ -355,6 +355,13 @@ const u8 gMoveDescription_ShockWave[] = _("A rapid jolt of\nelectricity strikes\
 const u8 gMoveDescription_WaterPulse[] = _("An attack with a\npulsing blast of\nwater. It may also\nconfuse the foe.");
 const u8 gMoveDescription_DoomDesire[] = _("A move that attacks\nthe foe with a\nblast of light two\nturns after use.");
 const u8 gMoveDescription_PsychoBoost[] = _("An intense attack\nthat also sharply\nreduces the user's\nSP. ATK stat.");
+const u8 gMoveDescription_DrainKiss[] = _("A life-sapping kiss\nthat restores over\nhalf of the damage\ndealt.");
+const u8 gMoveDescription_BulletPunch[] = _("A tough punch as\nfast as a bullet.\nThis move always\ngoes first.");
+const u8 gMoveDescription_AquaJet[] = _("The user lunges at\nthe foe at a great\nspeed. It is sure\nto strike first.");
+const u8 gMoveDescription_HoneClaws[] = _("The user sharpens\nits claws to boost\nits ATTACK and\naccuracy.");
+const u8 gMoveDescription_OminousWind[] = _("A gust of repulsive\nwind. It may raise\nall the user's\nstats.");
+const u8 gMoveDescription_ZenHeadbutt[] = _("The user focuses\nits willpower and\nrams the foe. The\ntarget may flinch.");
+const u8 gMoveDescription_DollEyes[] = _("A cute stare, which\nlowers the targets\nATK stat. This move\nalways goes first.");
 
 const u8 *const gMoveDescriptionPointers[MOVES_COUNT - 1] = {
     [MOVE_POUND         - 1] = gMoveDescription_Pound,
@@ -711,4 +718,11 @@ const u8 *const gMoveDescriptionPointers[MOVES_COUNT - 1] = {
     [MOVE_WATER_PULSE   - 1] = gMoveDescription_WaterPulse,
     [MOVE_DOOM_DESIRE   - 1] = gMoveDescription_DoomDesire,
     [MOVE_PSYCHO_BOOST  - 1] = gMoveDescription_PsychoBoost,
+    [MOVE_DRAIN_KISS  	- 1] = gMoveDescription_DrainKiss,
+    [MOVE_BULLET_PUNCH  - 1] = gMoveDescription_BulletPunch,
+    [MOVE_AQUA_JET  		- 1] = gMoveDescription_AquaJet,
+    [MOVE_HONE_CLAWS  	- 1] = gMoveDescription_HoneClaws,
+    [MOVE_OMINOUS_WIND  - 1] = gMoveDescription_OminousWind,
+    [MOVE_ZEN_HEADBUTT  - 1] = gMoveDescription_ZenHeadbutt,
+    [MOVE_DOLL_EYES  		- 1] = gMoveDescription_DollEyes,
 };

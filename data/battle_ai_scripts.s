@@ -211,6 +211,7 @@ AI_CheckBadMove_CheckEffect:: @ 81D9D27
 	if_effect EFFECT_WATER_SPORT, AI_CBM_WaterSport
 	if_effect EFFECT_CALM_MIND, AI_CBM_CalmMind
 	if_effect EFFECT_DRAGON_DANCE, AI_CBM_DragonDance
+	if_effect EFFECT_HONE_CLAWS, AI_CBM_HoneClaws
 	end
 
 AI_CBM_Sleep:: @ 81D9FB6
@@ -488,10 +489,13 @@ AI_CBM_Spikes:: @ 81DA27D
 	end
 
 AI_CBM_Foresight:: @ 81DA288
+	if_status2 AI_TARGET, STATUS2_FORESIGHT, AI_CBM_Foresight2
   if_has_move_with_low_accuracy AI_USER, Score_Plus1
-  if_stat_level_equal AI_USER, STAT_ACC, 5, Score_Plus1
-  if_stat_level_less_than AI_USER, STAT_ACC, 5, Score_Plus1
-	if_status2 AI_TARGET, STATUS2_FORESIGHT, Score_Minus10
+  if_stat_level_less_than AI_USER, STAT_ACC, 6, Score_Plus1
+	end
+
+AI_CBM_Foresight2::
+	goto Score_Minus10
 	end
 
 AI_CBM_PerishSong:: @ 81DA293
@@ -646,6 +650,17 @@ AI_CBM_DragonDance:: @ 81DA413
 	if_stat_level_equal AI_USER, STAT_ATK, 12, Score_Minus10
 	if_stat_level_equal AI_USER, STAT_SPEED, 12, Score_Minus8
 	end
+
+AI_CBM_HoneClaws::
+	if_stat_level_more_than AI_USER, STAT_ATK, 10, Score_Minus10
+	if_stat_level_more_than AI_USER, STAT_ACC, 10, Score_Minus10
+	if_stat_level_equal AI_USER, STAT_ATK, 9, Score_Minus8
+	if_stat_level_equal AI_USER, STAT_ACC, 9, Score_Minus8
+	if_stat_level_equal AI_USER, STAT_ATK, 8, Score_Minus5
+	if_stat_level_equal AI_USER, STAT_ACC, 8, Score_Minus5
+	if_stat_level_equal AI_USER, STAT_ATK, 7, Score_Minus3
+	if_stat_level_equal AI_USER, STAT_ACC, 7, Score_Minus3
+ 
 
 Score_Minus1:: @ 81DA424
 	score -1
@@ -821,6 +836,8 @@ AI_CheckViability:: @ 81DA445
 	if_effect EFFECT_DRAGON_DANCE, AI_CV_DragonDance
   if_effect EFFECT_THUNDER, AI_CV_Thunder
   if_effect EFFECT_BLIZZARD, AI_CV_Blizzard
+	if_effect EFFECT_DRAIN_KISS, AI_CV_Drain_Kiss
+	if_effect EFFECT_HONE_CLAWS, AI_CV_HoneClaws
 	end
 
 AI_CV_Sleep:: @ 81DA71C
@@ -845,6 +862,18 @@ AI_CV_AbsorbEncourageMaybe:: @ 81DA749
 	score -3
 
 AI_CV_Absorb_End:: @ 81DA751
+	end
+
+AI_CV_Drain_Kiss:: @ 81DA738
+	if_type_effectiveness AI_EFFECTIVENESS_x0_5, AI_CV_AbsorbEncourageMaybe
+	if_type_effectiveness AI_EFFECTIVENESS_x0_25, AI_CV_AbsorbEncourageMaybe
+	goto AI_CV_Absorb_End
+
+AI_CV_Drain_KissEncourageMaybe:: @ 81DA749
+	if_random_less_than 50, AI_CV_Absorb_End
+	score -3
+
+AI_CV_Drain_Kiss_End:: @ 81DA751
 	end
 
 AI_CV_SelfKO:: @ 81DA752
@@ -2832,18 +2861,31 @@ AI_CV_Blizzard::
 AI_CV_BlizzardUseHailInstead::
   if_has_move AI_USER, MOVE_HAIL, Score_Minus5
 
+AI_CV_HoneClaws::
+	if_has_physical_move AI_USER, AI_CV_HoneClaws_ScoreUp3
+	if_stat_level_less_than AI_USER, STAT_ACC, 5, AI_CV_HoneClaws_ScoreUp1
+	if_stat_level_less_than AI_USER, STAT_ATK, 5, AI_CV_HoneClaws_ScoreUp1
+	if_stat_level_less_than AI_USER, STAT_ACC, 6, AI_CV_HoneClaws_ScoreUp1
+	if_stat_level_less_than AI_USER, STAT_ATK, 6, AI_CV_HoneClaws_ScoreUp1
+	end
+
+AI_CV_HoneClaws_ScoreUp1::
+	score +1
+
+AI_CV_HoneClaws_ScoreUp3::
+	score +3
+
 AI_TryToFaint:: @ 81DBA6F
 	if_can_faint AI_TryToFaint_TryToEncourageQuickAttack
 	get_how_powerful_move_is
 	if_equal MOVE_NOT_MOST_POWERFUL, Score_Minus1
-@	if_type_effectiveness AI_EFFECTIVENESS_x4, AI_TryToFaint_DoubleSuperEffective  @ Improvement in Emerald
+	if_type_effectiveness AI_EFFECTIVENESS_x4, AI_TryToFaint_DoubleSuperEffective  @ Improvement in Emerald
 	end
 
-@ Improvement in Emerald
-@AI_TryToFaint_DoubleSuperEffective:
-@	if_random_less_than 80, AI_TryToFaint_End
-@	score +2
-@	end
+AI_TryToFaint_DoubleSuperEffective:
+	if_random_less_than 80, AI_TryToFaint_End
+	score +2
+	end
 
 AI_TryToFaint_TryToEncourageQuickAttack:: @ 81DBA7C
 	if_effect EFFECT_EXPLOSION, AI_TryToFaint_End
@@ -3122,6 +3164,7 @@ AI_HPAware_DiscouragedEffectsWhenMediumHP:: @ 81DBBD1
 	.byte EFFECT_BULK_UP
 	.byte EFFECT_CALM_MIND
 	.byte EFFECT_DRAGON_DANCE
+	.byte EFFECT_HONE_CLAWS
 	.byte -1
 
 AI_HPAware_DiscouragedEffectsWhenLowHP:: @ 81DBBFC
@@ -3172,6 +3215,7 @@ AI_HPAware_DiscouragedEffectsWhenLowHP:: @ 81DBBFC
 	.byte EFFECT_BULK_UP
 	.byte EFFECT_CALM_MIND
 	.byte EFFECT_DRAGON_DANCE
+	.byte EFFECT_HONE_CLAWS
 	.byte -1
 
 AI_HPAware_DiscouragedEffectsWhenTargetHighHP:: @ 81DBC2C
@@ -3217,6 +3261,7 @@ AI_HPAware_DiscouragedEffectsWhenTargetMediumHP:: @ 81DBC2D
 	.byte EFFECT_BULK_UP
 	.byte EFFECT_CALM_MIND
 	.byte EFFECT_DRAGON_DANCE
+	.byte EFFECT_DRAIN_KISS
 	.byte -1
 
 AI_HPAware_DiscouragedEffectsWhenTargetLowHP:: @ 81DBC55
@@ -3279,6 +3324,8 @@ AI_HPAware_DiscouragedEffectsWhenTargetLowHP:: @ 81DBC55
 	.byte EFFECT_BULK_UP
 	.byte EFFECT_CALM_MIND
 	.byte EFFECT_DRAGON_DANCE
+	.byte EFFECT_HONE_CLAWS
+	.byte EFFECT_DRAIN_KISS
 	.byte -1
 
 AI_Unknown:: @ 81DBC91

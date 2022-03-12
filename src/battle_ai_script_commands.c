@@ -107,6 +107,7 @@ static void Cmd_if_can_faint(void);
 static void Cmd_if_cant_faint(void);
 static void Cmd_if_has_move(void);
 static void Cmd_if_has_move_with_low_accuracy(void);
+static void Cmd_if_has_physical_move(void);
 static void Cmd_if_type_in_party(void);
 static void Cmd_if_doesnt_have_move(void);
 static void Cmd_if_has_move_with_effect(void);
@@ -244,6 +245,7 @@ static const BattleAICmdFunc sBattleAICmdTable[] =
     Cmd_if_target_not_taunted,            // 0x5D
     Cmd_if_has_move_with_low_accuracy,
     Cmd_if_type_in_party,
+		Cmd_if_has_physical_move,
 };
 
 static const u16 sDiscouragedPowerfulMoveEffects[] =
@@ -1602,6 +1604,50 @@ static void Cmd_if_has_move_with_low_accuracy(void)
         {
             if (gBattleMoves[BATTLE_HISTORY->usedMoves[gBattlerTarget >> 1][i]].accuracy < 90
                   && (gBattleMoves[BATTLE_HISTORY->usedMoves[gBattlerTarget >> 1][i]].effect != EFFECT_ALWAYS_HIT && gBattleMoves[BATTLE_HISTORY->usedMoves[gBattlerTarget >> 1][i]].accuracy > 0))
+                break;
+        }
+        if (i == 8)
+            sAIScriptPtr += 6;
+        else
+            sAIScriptPtr = T1_READ_PTR(sAIScriptPtr + 2);
+
+        break;
+    } 
+}
+
+static void Cmd_if_has_physical_move(void)
+{
+    int i;
+    int numElems;
+    numElems = sizeof(gBattleMons[gBattlerAttacker].moves)/sizeof(gBattleMons[gBattlerAttacker].moves[0]);
+    
+    switch (sAIScriptPtr[1])
+    {
+    case AI_USER:
+    case AI_USER_PARTNER:
+   
+        numElems = sizeof(gBattleMons[gBattlerAttacker].moves)/sizeof(gBattleMons[gBattlerAttacker].moves[0]);
+        for (i = 0; i < numElems; i++)
+        {
+            if (gBattleMoves[gBattleMons[gBattlerAttacker].moves[i]].move_cat == MOVE_CAT_PHYSICAL)
+            {
+                break;
+            }
+
+        }
+
+        if (i == numElems)
+            sAIScriptPtr += 6;
+        else
+            sAIScriptPtr = T1_READ_PTR(sAIScriptPtr + 2);
+
+        break;
+    case AI_TARGET:
+    case AI_TARGET_PARTNER:
+
+        for (i = 0; i < 8; i++)
+        {
+            if (gBattleMoves[BATTLE_HISTORY->usedMoves[gBattlerTarget >> 1][i]].move_cat == MOVE_CAT_PHYSICAL)
                 break;
         }
         if (i == 8)

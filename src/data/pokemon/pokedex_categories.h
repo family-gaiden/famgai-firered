@@ -33,7 +33,6 @@ static const u16 sDexCategory_GrasslandPkmn_Page5[] = {
 
 static const u16 sDexCategory_GrasslandPkmn_Page6[] = {
     SPECIES_TANGELA,
-    SPECIES_ROSELIA,
     SPECIES_SUNKERN,
     SPECIES_SUNFLORA,
 };
@@ -54,6 +53,7 @@ static const u16 sDexCategory_GrasslandPkmn_Page8[] = {
 static const u16 sDexCategory_GrasslandPkmn_Page9[] = {
     SPECIES_EKANS,
     SPECIES_ARBOK,
+    SPECIES_LICKITUNG,
 };
 
 static const u16 sDexCategory_GrasslandPkmn_Page10[] = {
@@ -70,7 +70,9 @@ static const u16 sDexCategory_GrasslandPkmn_Page11[] = {
 
 static const u16 sDexCategory_GrasslandPkmn_Page12[] = {
     SPECIES_FARFETCHD,
-    SPECIES_LICKITUNG,
+    SPECIES_BUDEW,
+    SPECIES_ROSELIA,
+    SPECIES_ROSERADE,
 };
 
 static const u16 sDexCategory_GrasslandPkmn_Page13[] = {
@@ -268,6 +270,7 @@ static const u16 sDexCategory_ForestPkmn_Page18[] = {
 static const u16 sDexCategory_ForestPkmn_Page19[] = {
     SPECIES_EXEGGCUTE,
     SPECIES_EXEGGUTOR,
+    SPECIES_BONSLY,
     SPECIES_SUDOWOODO,
 };
 

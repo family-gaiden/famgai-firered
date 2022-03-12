@@ -41,6 +41,11 @@ PewterCity_Gym_EventScript_Liam:: @ 816A63E
 	msgbox PewterCity_Gym_Text_LiamPostBattle, MSGBOX_AUTOCLOSE
 	end
 
+PewterCity_Gym_EventScript_Scotty:: @ 816A63E
+	trainerbattle_single TRAINER_YOUNGSTER_SCOTTY, PewterCity_Gym_Text_ScottyIntro, PewterCity_Gym_Text_ScottyDefeat
+	msgbox PewterCity_Gym_Text_ScottyPostBattle, MSGBOX_AUTOCLOSE
+	end
+
 PewterCity_Gym_EventScript_GymGuy:: @ 816A655
 	lock
 	faceplayer

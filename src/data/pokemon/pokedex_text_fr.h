@@ -2718,3 +2718,25 @@ const u8 gDeoxysPokedexText[] = _(
     "altering its appearance.");
 
 const u8 gDeoxysPokedexTextUnused[] = _("");
+
+const u8 gBudewPokedexText[] = _(
+    "Its flowers give off a relaxing fragrance.\n"
+    "The stronger its aroma, the healthier\n"
+    "the BUDEW is.");
+
+const u8 gBudewPokedexTextUnused[] = _("");
+
+const u8 gRoseradePokedexText[] = _(
+    "Its flowers give off a relaxing fragrance.\n"
+    "The stronger its aroma, the healthier\n"
+    "the ROSERADE is.");
+
+const u8 gRoseradePokedexTextUnused[] = _("");
+
+const u8 gBonslyPokedexText[] = _(
+    "Its flowers give off a relaxing fragrance.\n"
+    "The stronger its aroma, the healthier\n"
+    "the BONSLY is.");
+
+const u8 gBonslyPokedexTextUnused[] = _("");
+

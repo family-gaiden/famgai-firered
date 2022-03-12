@@ -1174,12 +1174,6 @@ const u16 gEggMoves[] = {
               MOVE_MEMENTO,
               MOVE_FAINT_ATTACK),
 
-    egg_moves(ROSELIA,
-              MOVE_SPIKES,
-              MOVE_SYNTHESIS,
-              MOVE_PIN_MISSILE,
-              MOVE_COTTON_SPORE),
-
     egg_moves(SLAKOTH,
               MOVE_PURSUIT,
               MOVE_SLASH,
@@ -1305,6 +1299,13 @@ const u16 gEggMoves[] = {
               MOVE_CURSE,
               MOVE_HYPNOSIS,
               MOVE_DREAM_EATER),
+    
+		egg_moves(ROSELIA,
+              MOVE_SPIKES,
+              MOVE_SYNTHESIS,
+              MOVE_PIN_MISSILE,
+              MOVE_COTTON_SPORE),
+
 
     EGG_MOVES_TERMINATOR
 };
