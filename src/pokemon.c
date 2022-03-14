@@ -510,6 +510,7 @@ static const u16 sSpeciesToHoennPokedexNum[] = // Assigns all species to the Hoe
     SPECIES_TO_HOENN(BUDEW),
     SPECIES_TO_HOENN(ROSERADE),
     SPECIES_TO_HOENN(BONSLY),
+    SPECIES_TO_HOENN(MUNCHLAX),
 };
 
 static const u16 sSpeciesToNationalPokedexNum[] = // Assigns all species to the National Dex Index (Summary No. for National Dex)
@@ -928,6 +929,7 @@ static const u16 sSpeciesToNationalPokedexNum[] = // Assigns all species to the 
     SPECIES_TO_NATIONAL(BUDEW),
     SPECIES_TO_NATIONAL(ROSERADE),
     SPECIES_TO_NATIONAL(BONSLY),
+    SPECIES_TO_NATIONAL(MUNCHLAX),
 };
 
 static const u16 sHoennToNationalOrder[] = // Assigns Hoenn Dex Pokémon (Using National Dex Index)
@@ -1346,6 +1348,7 @@ static const u16 sHoennToNationalOrder[] = // Assigns Hoenn Dex Pokémon (Using 
     HOENN_TO_NATIONAL(BUDEW),
     HOENN_TO_NATIONAL(ROSERADE),
     HOENN_TO_NATIONAL(BONSLY),
+    HOENN_TO_NATIONAL(MUNCHLAX),
 };
 
 static const struct SpindaSpot sSpindaSpotGraphics[] =

@@ -720,6 +720,11 @@ const struct MonCoords gMonFrontPicCoords[] =
         .size = 0x87,
         .y_offset = 0x05,
     },
+    [SPECIES_MUNCHLAX] =
+    {
+        .size = 0x87,
+        .y_offset = 0x05,
+    },
     [SPECIES_ARTICUNO] =
     {
         .size = 0x88,
@@ -2073,7 +2078,7 @@ const struct MonCoords gMonFrontPicCoords[] =
     [SPECIES_BONSLY] =
     {
         .size = 0x87,
-        .y_offset = 0x01,
+        .y_offset = 0x0b,
     },
     [SPECIES_EGG] =
     {

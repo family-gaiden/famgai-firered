@@ -1859,6 +1859,19 @@ const struct PokedexEntry gPokedexEntries[] =
         .trainerOffset = 2,
     },
 
+    [NATIONAL_DEX_MUNCHLAX] =
+    {
+        .categoryName = _("BIG EATER"),
+        .height = 21,
+        .weight = 4600,
+        .description = gMunchlaxPokedexText,
+        .unusedDescription = gMunchlaxPokedexTextUnused,
+        .pokemonScale = 275,
+        .pokemonOffset = 1,
+        .trainerScale = 408,
+        .trainerOffset = 7,
+    },
+
     [NATIONAL_DEX_SNORLAX] =
     {
         .categoryName = _("SLEEPING"),

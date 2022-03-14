@@ -2742,6 +2742,13 @@ const u32 gMonShinyPalette_Roserade[] = INCBIN_U32("graphics/pokemon/roserade/sh
 const u8 gMonIcon_Roserade[] = INCBIN_U8("graphics/pokemon/roserade/icon.4bpp");
 const u8 gMonFootprint_Roserade[] = INCBIN_U8("graphics/pokemon/roserade/footprint.1bpp");
 
+const u32 gMonFrontPic_Munchlax[] = INCBIN_U32("graphics/pokemon/munchlax/front.4bpp.lz");
+const u32 gMonPalette_Munchlax[] = INCBIN_U32("graphics/pokemon/munchlax/normal.gbapal.lz");
+const u32 gMonBackPic_Munchlax[] = INCBIN_U32("graphics/pokemon/munchlax/back.4bpp.lz");
+const u32 gMonShinyPalette_Munchlax[] = INCBIN_U32("graphics/pokemon/munchlax/shiny.gbapal.lz");
+const u8 gMonIcon_Munchlax[] = INCBIN_U8("graphics/pokemon/munchlax/icon.4bpp");
+const u8 gMonFootprint_Munchlax[] = INCBIN_U8("graphics/pokemon/munchlax/footprint.1bpp");
+
 const u32 gMonFrontPic_Egg[] = INCBIN_U32("graphics/pokemon/egg/front.4bpp.lz");
 const u32 gMonPalette_Egg[] = INCBIN_U32("graphics/pokemon/egg/normal.gbapal.lz");
 

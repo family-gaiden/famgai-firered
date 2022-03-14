@@ -413,5 +413,6 @@ const u8 gSpeciesNames[][11] = {
     _("CHIMECHO"),
     _("BUDEW"),
     _("ROSERADE"),
-    _("BONSLY")
+    _("BONSLY"),
+    _("MUNCHLAX")
 };

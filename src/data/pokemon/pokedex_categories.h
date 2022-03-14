@@ -628,6 +628,7 @@ static const u16 sDexCategory_MountainPkmn_Page12[] = {
 };
 
 static const u16 sDexCategory_MountainPkmn_Page13[] = {
+    SPECIES_MUNCHLAX,
     SPECIES_SNORLAX,
 };
 

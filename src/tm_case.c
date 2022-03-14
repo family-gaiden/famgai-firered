@@ -75,7 +75,7 @@ static void CreateTMCaseListMenuBuffers(void);
 static void InitTMCaseListMenuItems(void);
 static void GetTMNumberAndMoveString(u8 * dest, u16 itemId);
 static void TMCase_MoveCursorFunc(s32 itemIndex, bool8 onInit, struct ListMenu *list);
-static void TMCase_ItemPrintFunc(u8 windowId, u32 itemId, u8 y);
+static void TMCase_ItemPrintFunc(u8 windowId, u32 itemIndex, u8 y);
 static void TMCase_MoveCursor_UpdatePrintedDescription(s32 itemIndex);
 static void PrintListMenuCursorAt_WithColorIdx(u8 a0, u8 a1);
 static void CreateTMCaseScrollIndicatorArrowPair_Main(void);
@@ -554,17 +554,11 @@ static void TMCase_MoveCursorFunc(s32 itemIndex, bool8 onInit, struct ListMenu *
     TMCase_MoveCursor_UpdatePrintedTMInfo(itemId);
 }
 
-static void TMCase_ItemPrintFunc(u8 windowId, u32 itemId, u8 y)
+static void TMCase_ItemPrintFunc(u8 windowId, u32 itemIndex, u8 y)
 {
-    if (itemId != -2)
+    if (itemIndex != -2)
     {
-        if (!itemid_is_unique(BagGetItemIdByPocketPosition(POCKET_TM_CASE, itemId)))
-        {
-            ConvertIntToDecimalStringN(gStringVar1, BagGetQuantityByPocketPosition(POCKET_TM_CASE, itemId), STR_CONV_MODE_RIGHT_ALIGN, 3);
-            StringExpandPlaceholders(gStringVar4, gText_TimesStrVar1);
-            AddTextPrinterParameterized_ColorByIndex(windowId, 0, gStringVar4, 0x7E, y, 0, 0, 0xFF, 1);
-        }
-        else if(itemId >= ITEM_HM01)
+        if(BagGetItemIdByPocketPosition(POCKET_TM_CASE, itemIndex) >= ITEM_HM01)
         {
             PlaceHMTileInWindow(windowId, 8, y);
         }

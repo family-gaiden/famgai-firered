@@ -415,4 +415,5 @@ const u16 *const gLevelUpLearnsets[NUM_SPECIES] =
     [SPECIES_BUDEW] = sBudewLevelUpLearnset,
     [SPECIES_ROSERADE] = sRoseradeLevelUpLearnset,
     [SPECIES_BONSLY] = sBonslyLevelUpLearnset,
+    [SPECIES_MUNCHLAX] = sMunchlaxLevelUpLearnset,
 };

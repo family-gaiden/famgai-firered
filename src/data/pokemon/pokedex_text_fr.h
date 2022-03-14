@@ -1006,6 +1006,13 @@ const u8 gSnorlaxPokedexText[] = _(
 
 const u8 gSnorlaxPokedexTextUnused[] = _("");
 
+const u8 gMunchlaxPokedexText[] = _(
+    "It wolfs down its weight in food once a\n"
+    "day, swallowing food whole with almost\n"
+    "no chewing.");
+
+const u8 gMunchlaxPokedexTextUnused[] = _("");
+
 const u8 gArticunoPokedexText[] = _(
     "One of the legendary bird POKéMON.\n"
     "With its long tail trailing behind, its\n"

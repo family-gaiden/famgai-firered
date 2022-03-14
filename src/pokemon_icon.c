@@ -441,6 +441,7 @@ const u8 *const gMonIconTable[] = {
     [SPECIES_BUDEW]     	= gMonIcon_Budew,
 		[SPECIES_ROSERADE]    = gMonIcon_Roserade,
     [SPECIES_BONSLY]    	= gMonIcon_Bonsly,
+    [SPECIES_MUNCHLAX]    = gMonIcon_Munchlax,
     [SPECIES_EGG]         = gMonIcon_Egg,
     [SPECIES_UNOWN_B]     = gMonIcon_UnownB,
     [SPECIES_UNOWN_C]     = gMonIcon_UnownC,
@@ -914,7 +915,8 @@ const u8 gMonIconPaletteIndices[] = {
     [SPECIES_UNOWN_QMARK] = 0,
     [SPECIES_BUDEW]     	= 1,
     [SPECIES_ROSERADE]    = 0,
-    [SPECIES_BONSLY]     	= 1
+    [SPECIES_BONSLY]     	= 1,
+    [SPECIES_MUNCHLAX]    = 2
 };
 
 const struct SpritePalette gMonIconPaletteTable[] = {
