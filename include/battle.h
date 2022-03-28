@@ -647,6 +647,7 @@ extern u16 gBattle_WIN1V;
 extern struct BattleSpritesGfx *gMonSpritesGfx;
 extern u8 gBattleOutcome;
 extern u16 gLastUsedItem;
+extern u16 gTmpAttackerItemStore;
 extern u32 gBattleTypeFlags;
 extern struct MonSpritesGfx *gMonSpritesGfxPtr;
 extern u16 gTrainerBattleOpponent_A;

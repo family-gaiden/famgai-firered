@@ -9,6 +9,7 @@
 #include "mail.h"
 #include "event_data.h"
 #include "strings.h"
+#include "berry.h"
 #include "pokemon_special_anim.h"
 #include "pokemon_storage_system.h"
 #include "pokemon_summary_screen.h"
@@ -54,6 +55,7 @@ static void DrawLevelUpWindow2(void);
 static bool8 sub_8026648(void);
 static void PutMonIconOnLvlUpBox(void);
 static void PutLevelAndGenderOnLvlUpBox(void);
+static u8 GetItemEffectForPluck(u8 battlerId, u16 itemId);
 
 static void SpriteCB_MonIconOnLvlUpBox(struct Sprite *sprite);
 
@@ -305,6 +307,7 @@ static void atkF4_subattackerhpbydmg(void);
 static void atkF5_removeattackerstatus1(void);
 static void atkF6_finishaction(void);
 static void atkF7_finishturn(void);
+static void atkF8_resetlastuseditem(void);
 
 void (* const gBattleScriptingCommandsTable[])(void) =
 {
@@ -556,6 +559,7 @@ void (* const gBattleScriptingCommandsTable[])(void) =
     atkF5_removeattackerstatus1,
     atkF6_finishaction,
     atkF7_finishturn,
+    atkF8_resetlastuseditem,
 };
 
 struct StatFractions
@@ -690,6 +694,7 @@ static const u8 *const sMoveEffectBS_Ptrs[] =
     [MOVE_EFFECT_ATK_DEF_DOWN] = BattleScript_MoveEffectSleep,
     [MOVE_EFFECT_RECOIL_33] = BattleScript_MoveEffectRecoil,
     [MOVE_EFFECT_BLIZZARD] = BattleScript_MoveEffectFreeze,
+    [MOVE_EFFECT_EAT_ENEMY_BERRY] = BattleScript_MoveEffectSleep,
 };
 
 // not used
@@ -830,15 +835,15 @@ static const struct PickupItem sPickupItems[] =
     { ITEM_RAWST_BERRY, 55 },
     { ITEM_ASPEAR_BERRY, 65 },
     { ITEM_PERSIM_BERRY, 75 },
-    { ITEM_ETHER, 80 },
-    { ITEM_PP_UP, 85 },
+    { ITEM_LEPPA_BERRY, 80 },
+    { ITEM_LUM_BERRY, 85 },
     { ITEM_RARE_CANDY, 90 },
     { ITEM_NUGGET, 95 },
-    { ITEM_SPELON_BERRY, 96 },
-    { ITEM_PAMTRE_BERRY, 97 },
-    { ITEM_WATMEL_BERRY, 98 },
-    { ITEM_DURIN_BERRY, 99 },
-    { ITEM_BELUE_BERRY, 1 },
+    { ITEM_LIECHI_BERRY, 96 },
+    { ITEM_GANLON_BERRY, 97 },
+    { ITEM_SALAC_BERRY, 98 },
+    { ITEM_PETAYA_BERRY, 99 },
+    { ITEM_APICOT_BERRY, 1 },
 
 };
 
@@ -2139,7 +2144,8 @@ void SetMoveEffect(bool8 primary, u8 certain)
     }
     if (gBattleMons[gEffectBattler].hp == 0
      && gBattleCommunication[MOVE_EFFECT_BYTE] != MOVE_EFFECT_PAYDAY
-     && gBattleCommunication[MOVE_EFFECT_BYTE] != MOVE_EFFECT_STEAL_ITEM)
+     && gBattleCommunication[MOVE_EFFECT_BYTE] != MOVE_EFFECT_STEAL_ITEM
+     && gBattleCommunication[MOVE_EFFECT_BYTE] != MOVE_EFFECT_EAT_ENEMY_BERRY)
     {
         ++gBattlescriptCurrInstr;
         return;
@@ -2584,6 +2590,7 @@ void SetMoveEffect(bool8 primary, u8 certain)
                 ++gBattlescriptCurrInstr;
                 break;
             case MOVE_EFFECT_STEAL_ITEM:
+            case MOVE_EFFECT_EAT_ENEMY_BERRY:
                 {
                     if (gBattleTypeFlags & BATTLE_TYPE_TRAINER_TOWER)
                     {
@@ -2616,7 +2623,7 @@ void SetMoveEffect(bool8 primary, u8 certain)
                         gLastUsedAbility = gBattleMons[gBattlerTarget].ability;
                         RecordAbilityBattle(gBattlerTarget, gLastUsedAbility);
                     }
-                    else if (gBattleMons[gBattlerAttacker].item != ITEM_NONE
+                    else if ((gBattleMons[gBattlerAttacker].item != ITEM_NONE && gBattleCommunication[MOVE_EFFECT_BYTE] == MOVE_EFFECT_STEAL_ITEM)
                           || gBattleMons[gBattlerTarget].item == ITEM_ENIGMA_BERRY
                           || IS_ITEM_MAIL(gBattleMons[gBattlerTarget].item)
                           || gBattleMons[gBattlerTarget].item == ITEM_NONE)
@@ -2625,19 +2632,35 @@ void SetMoveEffect(bool8 primary, u8 certain)
                     }
                     else
                     {
-                        u16 *changedItem = &gBattleStruct->changedItems[gBattlerAttacker];
-                        gLastUsedItem = *changedItem = gBattleMons[gBattlerTarget].item;
-                        gBattleMons[gBattlerTarget].item = ITEM_NONE;
-                        gActiveBattler = gBattlerAttacker;
-                        BtlController_EmitSetMonData(0, REQUEST_HELDITEM_BATTLE, 0, 2, &gLastUsedItem);
-                        MarkBattlerForControllerExec(gBattlerAttacker);
-                        gActiveBattler = gBattlerTarget;
-                        BtlController_EmitSetMonData(0, REQUEST_HELDITEM_BATTLE, 0, 2, &gBattleMons[gBattlerTarget].item);
-                        MarkBattlerForControllerExec(gBattlerTarget);
-                        BattleScriptPush(gBattlescriptCurrInstr + 1);
-                        gBattlescriptCurrInstr = BattleScript_ItemSteal;
-                        *(u8 *)((u8 *)(&gBattleStruct->choicedMove[gBattlerTarget]) + 0) = 0;
-                        *(u8 *)((u8 *)(&gBattleStruct->choicedMove[gBattlerTarget]) + 1) = 0;
+                        if(gBattleCommunication[MOVE_EFFECT_BYTE] == MOVE_EFFECT_STEAL_ITEM){
+                            u16 *changedItem = &gBattleStruct->changedItems[gBattlerAttacker];
+                            gLastUsedItem = *changedItem = gBattleMons[gBattlerTarget].item;
+                            gBattleMons[gBattlerTarget].item = ITEM_NONE;
+                            gActiveBattler = gBattlerAttacker;
+                            BtlController_EmitSetMonData(0, REQUEST_HELDITEM_BATTLE, 0, 2, &gLastUsedItem);
+                            MarkBattlerForControllerExec(gBattlerAttacker);
+                            gActiveBattler = gBattlerTarget;
+                            BtlController_EmitSetMonData(0, REQUEST_HELDITEM_BATTLE, 0, 2, &gBattleMons[gBattlerTarget].item);
+                            MarkBattlerForControllerExec(gBattlerTarget);
+                            BattleScriptPush(gBattlescriptCurrInstr + 1);
+                            gBattlescriptCurrInstr = BattleScript_ItemSteal;
+                            *(u8 *)((u8 *)(&gBattleStruct->choicedMove[gBattlerTarget]) + 0) = 0;
+                            *(u8 *)((u8 *)(&gBattleStruct->choicedMove[gBattlerTarget]) + 1) = 0;
+                        }
+                        else if(gBattleCommunication[MOVE_EFFECT_BYTE] == MOVE_EFFECT_EAT_ENEMY_BERRY 
+                                && (gBattleMons[gBattlerTarget].item >= ITEM_CHERI_BERRY
+                                  && gBattleMons[gBattlerTarget].item <= ITEM_STARF_BERRY))
+                        {
+                            u8 effect = 0;
+                            effect = GetItemEffectForPluck(gBattlerAttacker, gBattleMons[gBattlerAttacker].item);
+                            if(effect != 0){
+                                *(u8 *)((u8 *)(&gBattleStruct->choicedMove[gBattlerTarget]) + 0) = 0;
+                                *(u8 *)((u8 *)(&gBattleStruct->choicedMove[gBattlerTarget]) + 1) = 0;
+                            }
+                        }
+                        else{
+                            ++gBattlescriptCurrInstr;
+                        }
                     }
                 }
                 break;
@@ -9401,4 +9424,456 @@ static void atkF7_finishturn(void)
 {
     gCurrentActionFuncId = B_ACTION_FINISHED;
     gCurrentTurnActionNumber = gBattlersCount;
+}
+
+static void atkF8_resetlastuseditem(void){
+    int i = 0;
+    u16 move;
+    struct Pokemon *mon;
+    gBattleMons[gBattlerAttacker].item = gTmpAttackerItemStore;
+    gTmpAttackerItemStore = ITEM_NONE;
+    gLastUsedItem = ITEM_NONE;
+    gActiveBattler = gBattlerAttacker;    
+    BtlController_EmitSetMonData(0, REQUEST_HELDITEM_BATTLE, 0, 2, &gBattleMons[gBattlerAttacker].item);
+    MarkBattlerForControllerExec(gBattlerAttacker);
+    ++gBattlescriptCurrInstr;
+}
+
+static u8 GetItemEffectForPluck(u8 battlerId, u16 itemId){
+    int i = 0;
+    u8 effect = 0;
+    u8 changedPP = 0;
+    u8 battlerHoldEffect, atkHoldEffect, defHoldEffect;
+    u8 battlerHoldEffectParam, atkHoldEffectParam, defHoldEffectParam;
+    u16 atkItem, defItem;
+    struct Pokemon *mon;
+    struct Pokemon *enemy_mon;
+    u8 ppBonuses;
+    u16 move;
+
+    gLastUsedItem = gBattleMons[gBattlerTarget].item;
+    gTmpAttackerItemStore = gBattleMons[gBattlerAttacker].item;
+    if (gLastUsedItem == ITEM_ENIGMA_BERRY)
+    {
+        battlerHoldEffect = gEnigmaBerries[battlerId].holdEffect;
+        battlerHoldEffectParam = gEnigmaBerries[battlerId].holdEffectParam;
+    }
+    else
+    {
+        battlerHoldEffect = ItemId_GetHoldEffect(gLastUsedItem);
+        battlerHoldEffectParam = ItemId_GetHoldEffectParam(gLastUsedItem);
+    }
+    if (GetBattlerSide(gBattlerAttacker) == B_SIDE_PLAYER)
+        mon = &gPlayerParty[gBattlerPartyIndexes[gBattlerAttacker]];
+    else
+        mon = &gEnemyParty[gBattlerPartyIndexes[gBattlerAttacker]];
+    switch (battlerHoldEffect)
+    {
+        case HOLD_EFFECT_RESTORE_HP:
+            if (gBattleMons[battlerId].hp <= gBattleMons[battlerId].maxHP / 2)
+            {
+                gBattleMoveDamage = battlerHoldEffectParam;
+                if (gBattleMons[battlerId].hp + battlerHoldEffectParam > gBattleMons[battlerId].maxHP)
+                    gBattleMoveDamage = gBattleMons[battlerId].maxHP - gBattleMons[battlerId].hp;
+                gBattleMoveDamage *= -1;
+                BattleScriptPush(gBattlescriptCurrInstr + 1);
+                gBattlescriptCurrInstr = BattleScript_ItemHealHP_RemoveItem_Pluck;
+                effect = 1;
+            }
+            break;
+        case HOLD_EFFECT_RESTORE_PP:
+  
+            for (i = 0; i < MAX_MON_MOVES; ++i)
+            {
+                move = GetMonData(mon, MON_DATA_MOVE1 + i);
+                changedPP = GetMonData(mon, MON_DATA_PP1 + i);
+                ppBonuses = GetMonData(mon, MON_DATA_PP_BONUSES);
+                if (move && changedPP == 0){
+                    gCurrentMove = move;
+                    break;
+                }
+            }
+            if (i != MAX_MON_MOVES)
+            {
+                u8 maxPP = CalculatePPWithBonus(move, ppBonuses, i);
+                if (changedPP + battlerHoldEffectParam > maxPP)
+                    changedPP = maxPP;
+                else
+                    changedPP = changedPP + battlerHoldEffectParam;
+
+                if (!(gBattleMons[gBattlerAttacker].status2 & STATUS2_TRANSFORMED) && !(gDisableStructs[gBattlerAttacker].mimickedMoves & gBitTable[i])){
+                    gBattleScripting.battler =  gBattlerAttacker;
+                    gPotentialItemEffectBattler =  gBattlerAttacker;
+                    gActiveBattler = gBattlerAttacker;
+                    gBattleMons[gBattlerAttacker].pp[i] += changedPP;
+                    
+                    BattleScriptPush(gBattlescriptCurrInstr + 1);
+                    gBattlescriptCurrInstr = BattleScript_Pluck_PPHeal;
+                    BtlController_EmitSetMonData(0, REQUEST_PPMOVE1_BATTLE + i, 0, 1, &gBattleMons[gBattlerAttacker].pp[i]);
+                    SetMonData(mon, MON_DATA_PP1 + i, &gBattleMons[gBattlerAttacker].pp[i]);
+                    PREPARE_MOVE_BUFFER(gBattleTextBuff1, move);
+                    effect = 1;
+                }
+            }
+            break;
+        case HOLD_EFFECT_CONFUSE_SPICY:
+            if (gBattleMons[battlerId].hp <= gBattleMons[battlerId].maxHP / 2)
+            {
+                PREPARE_FLAVOR_BUFFER(gBattleTextBuff1, FLAVOR_SPICY);
+                gBattleMoveDamage = gBattleMons[battlerId].maxHP / battlerHoldEffectParam;
+                if (gBattleMoveDamage == 0)
+                    gBattleMoveDamage = 1;
+                if (gBattleMons[battlerId].hp + gBattleMoveDamage > gBattleMons[battlerId].maxHP)
+                    gBattleMoveDamage = gBattleMons[battlerId].maxHP - gBattleMons[battlerId].hp;
+                gBattleMoveDamage *= -1;
+                if (GetFlavorRelationByPersonality(gBattleMons[battlerId].personality, FLAVOR_SPICY) < 0){
+                    BattleScriptPush(gBattlescriptCurrInstr + 1);
+                    gBattlescriptCurrInstr = BattleScript_BerryConfuseHeal_Pluck;
+                }
+                else{
+                    BattleScriptPush(gBattlescriptCurrInstr + 1);
+                    gBattlescriptCurrInstr = BattleScript_ItemHealHP_RemoveItem_Pluck;
+                }
+                effect = 1;
+            }
+            break;
+        case HOLD_EFFECT_CONFUSE_DRY:
+            if (gBattleMons[battlerId].hp <= gBattleMons[battlerId].maxHP / 2)
+            {
+                PREPARE_FLAVOR_BUFFER(gBattleTextBuff1, FLAVOR_DRY);
+                gBattleMoveDamage = gBattleMons[battlerId].maxHP / battlerHoldEffectParam;
+                if (gBattleMoveDamage == 0)
+                    gBattleMoveDamage = 1;
+                if (gBattleMons[battlerId].hp + gBattleMoveDamage > gBattleMons[battlerId].maxHP)
+                    gBattleMoveDamage = gBattleMons[battlerId].maxHP - gBattleMons[battlerId].hp;
+                gBattleMoveDamage *= -1;
+                if (GetFlavorRelationByPersonality(gBattleMons[battlerId].personality, FLAVOR_DRY) < 0)
+                {
+                    BattleScriptPush(gBattlescriptCurrInstr + 1);
+                    gBattlescriptCurrInstr = BattleScript_BerryConfuseHeal_Pluck;
+                }
+                else{
+                    BattleScriptPush(gBattlescriptCurrInstr + 1);
+                    gBattlescriptCurrInstr = BattleScript_ItemHealHP_RemoveItem_Pluck;
+                }
+                effect = 1;
+            }
+            break;
+        case HOLD_EFFECT_CONFUSE_SWEET:
+            if (gBattleMons[battlerId].hp <= gBattleMons[battlerId].maxHP / 2)
+            {
+                PREPARE_FLAVOR_BUFFER(gBattleTextBuff1, FLAVOR_SWEET);
+                gBattleMoveDamage = gBattleMons[battlerId].maxHP / battlerHoldEffectParam;
+                if (gBattleMoveDamage == 0)
+                    gBattleMoveDamage = 1;
+                if (gBattleMons[battlerId].hp + gBattleMoveDamage > gBattleMons[battlerId].maxHP)
+                    gBattleMoveDamage = gBattleMons[battlerId].maxHP - gBattleMons[battlerId].hp;
+                gBattleMoveDamage *= -1;
+                if (GetFlavorRelationByPersonality(gBattleMons[battlerId].personality, FLAVOR_SWEET) < 0)
+                {
+                    BattleScriptPush(gBattlescriptCurrInstr + 1);
+                    gBattlescriptCurrInstr = BattleScript_BerryConfuseHeal_Pluck;
+                }
+                else{
+                    BattleScriptPush(gBattlescriptCurrInstr + 1);
+                    gBattlescriptCurrInstr = BattleScript_ItemHealHP_RemoveItem_Pluck;
+                }
+                effect = 1;
+            }
+            break;
+        case HOLD_EFFECT_CONFUSE_BITTER:
+            if (gBattleMons[battlerId].hp <= gBattleMons[battlerId].maxHP / 2)
+            {
+                PREPARE_FLAVOR_BUFFER(gBattleTextBuff1, FLAVOR_BITTER);
+                gBattleMoveDamage = gBattleMons[battlerId].maxHP / battlerHoldEffectParam;
+                if (gBattleMoveDamage == 0)
+                    gBattleMoveDamage = 1;
+                if (gBattleMons[battlerId].hp + gBattleMoveDamage > gBattleMons[battlerId].maxHP)
+                    gBattleMoveDamage = gBattleMons[battlerId].maxHP - gBattleMons[battlerId].hp;
+                gBattleMoveDamage *= -1;
+                if (GetFlavorRelationByPersonality(gBattleMons[battlerId].personality, FLAVOR_BITTER) < 0)
+                {
+                    BattleScriptPush(gBattlescriptCurrInstr + 1);
+                    gBattlescriptCurrInstr = BattleScript_BerryConfuseHeal_Pluck;
+                }
+                else{
+                    BattleScriptPush(gBattlescriptCurrInstr + 1);
+                    gBattlescriptCurrInstr = BattleScript_ItemHealHP_RemoveItem_Pluck;
+                }
+                effect = 1;
+            }
+            break;
+        case HOLD_EFFECT_CONFUSE_SOUR:
+            if (gBattleMons[battlerId].hp <= gBattleMons[battlerId].maxHP / 2)
+            {
+                PREPARE_FLAVOR_BUFFER(gBattleTextBuff1, FLAVOR_SOUR);
+                gBattleMoveDamage = gBattleMons[battlerId].maxHP / battlerHoldEffectParam;
+                if (gBattleMoveDamage == 0)
+                    gBattleMoveDamage = 1;
+                if (gBattleMons[battlerId].hp + gBattleMoveDamage > gBattleMons[battlerId].maxHP)
+                    gBattleMoveDamage = gBattleMons[battlerId].maxHP - gBattleMons[battlerId].hp;
+                gBattleMoveDamage *= -1;
+                if (GetFlavorRelationByPersonality(gBattleMons[battlerId].personality, FLAVOR_SOUR) < 0)
+                {
+                    BattleScriptPush(gBattlescriptCurrInstr + 1);
+                    gBattlescriptCurrInstr = BattleScript_BerryConfuseHeal_Pluck;
+                }
+                else{
+                    BattleScriptPush(gBattlescriptCurrInstr + 1);
+                    gBattlescriptCurrInstr = BattleScript_ItemHealHP_RemoveItem_Pluck;
+                }
+                effect = 1;
+            }
+            break;
+        case HOLD_EFFECT_ATTACK_UP:
+            if (gBattleMons[battlerId].hp <= gBattleMons[battlerId].maxHP / battlerHoldEffectParam && gBattleMons[battlerId].statStages[STAT_ATK] < 0xC)
+            {
+                const u8 *jumpPtr = T1_READ_PTR(gBattlescriptCurrInstr + 2);
+                PREPARE_STAT_BUFFER(gBattleTextBuff1, STAT_ATK);
+                PREPARE_STRING_BUFFER(gBattleTextBuff2, STRINGID_STATROSE);
+                gEffectBattler = battlerId;
+                SET_STATCHANGER(STAT_ATK, 1, FALSE);
+                ChangeStatBuffs(gBattleScripting.statChanger & 0xF0, GET_STAT_BUFF_ID(gBattleScripting.statChanger), gBattlescriptCurrInstr[1], jumpPtr);
+                gBattleScripting.animArg1 = 0xE + STAT_ATK;
+                gBattleScripting.animArg2 = 0;
+                BattleScriptPush(gBattlescriptCurrInstr + 1);
+                gBattlescriptCurrInstr = BattleScript_BerryStatRaise_Pluck;
+                effect = 1;
+            }
+            break;
+        case HOLD_EFFECT_DEFENSE_UP:
+            if (gBattleMons[battlerId].hp <= gBattleMons[battlerId].maxHP / battlerHoldEffectParam && gBattleMons[battlerId].statStages[STAT_DEF] < 0xC)
+            {
+                const u8 *jumpPtr = T1_READ_PTR(gBattlescriptCurrInstr + 2);
+                PREPARE_STAT_BUFFER(gBattleTextBuff1, STAT_DEF);
+                gEffectBattler = battlerId;
+                SET_STATCHANGER(STAT_DEF, 1, FALSE);
+                ChangeStatBuffs(gBattleScripting.statChanger & 0xF0, GET_STAT_BUFF_ID(gBattleScripting.statChanger), gBattlescriptCurrInstr[1], jumpPtr);
+                gBattleScripting.animArg1 = 0xE + STAT_DEF;
+                gBattleScripting.animArg2 = 0;
+                BattleScriptPush(gBattlescriptCurrInstr + 1);
+                gBattlescriptCurrInstr = BattleScript_BerryStatRaise_Pluck;
+                effect = 1;
+            }
+            break;
+        case HOLD_EFFECT_SPEED_UP:
+            if (gBattleMons[battlerId].hp <= gBattleMons[battlerId].maxHP / battlerHoldEffectParam && gBattleMons[battlerId].statStages[STAT_SPEED] < 0xC)
+            {
+                const u8 *jumpPtr = T1_READ_PTR(gBattlescriptCurrInstr + 2);
+                PREPARE_STAT_BUFFER(gBattleTextBuff1, STAT_SPEED);
+                gEffectBattler = battlerId;
+                SET_STATCHANGER(STAT_SPEED, 1, FALSE);
+                ChangeStatBuffs(gBattleScripting.statChanger & 0xF0, GET_STAT_BUFF_ID(gBattleScripting.statChanger), gBattlescriptCurrInstr[1], jumpPtr);
+                gBattleScripting.animArg1 = 0xE + STAT_SPEED;
+                gBattleScripting.animArg2 = 0;
+                BattleScriptPush(gBattlescriptCurrInstr + 1);
+                gBattlescriptCurrInstr = BattleScript_BerryStatRaise_Pluck;
+                effect = 1;
+            }
+            break;
+        case HOLD_EFFECT_SP_ATTACK_UP:
+            if (gBattleMons[battlerId].hp <= gBattleMons[battlerId].maxHP / battlerHoldEffectParam && gBattleMons[battlerId].statStages[STAT_SPATK] < 0xC)
+            {
+                const u8 *jumpPtr = T1_READ_PTR(gBattlescriptCurrInstr + 2);
+                PREPARE_STAT_BUFFER(gBattleTextBuff1, STAT_SPATK);
+                gEffectBattler = battlerId;
+                SET_STATCHANGER(STAT_SPATK, 1, FALSE);
+                ChangeStatBuffs(gBattleScripting.statChanger & 0xF0, GET_STAT_BUFF_ID(gBattleScripting.statChanger), gBattlescriptCurrInstr[1], jumpPtr);
+                gBattleScripting.animArg1 = 0xE + STAT_SPATK;
+                gBattleScripting.animArg2 = 0;
+                BattleScriptPush(gBattlescriptCurrInstr + 1);
+                gBattlescriptCurrInstr = BattleScript_BerryStatRaise_Pluck;
+                effect = 1;
+            }
+            break;
+        case HOLD_EFFECT_SP_DEFENSE_UP:
+            if (gBattleMons[battlerId].hp <= gBattleMons[battlerId].maxHP / battlerHoldEffectParam && gBattleMons[battlerId].statStages[STAT_SPDEF] < 0xC)
+            {
+                const u8 *jumpPtr = T1_READ_PTR(gBattlescriptCurrInstr + 2);
+                PREPARE_STAT_BUFFER(gBattleTextBuff1, STAT_SPDEF);
+                gEffectBattler = battlerId;
+                SET_STATCHANGER(STAT_SPDEF, 1, FALSE);
+                ChangeStatBuffs(gBattleScripting.statChanger & 0xF0, GET_STAT_BUFF_ID(gBattleScripting.statChanger), gBattlescriptCurrInstr[1], jumpPtr);
+                gBattleScripting.animArg1 = 0xE + STAT_SPDEF;
+                gBattleScripting.animArg2 = 0;
+                BattleScriptPush(gBattlescriptCurrInstr + 1);
+                gBattlescriptCurrInstr = BattleScript_BerryStatRaise_Pluck;
+                effect = 1;
+            }
+            break;
+        case HOLD_EFFECT_CRITICAL_UP:
+            if (gBattleMons[battlerId].hp <= gBattleMons[battlerId].maxHP / battlerHoldEffectParam && !(gBattleMons[battlerId].status2 & STATUS2_FOCUS_ENERGY))
+            {
+                gBattleMons[battlerId].status2 |= STATUS2_FOCUS_ENERGY;
+                BattleScriptPush(gBattlescriptCurrInstr + 1);
+                gBattlescriptCurrInstr = BattleScript_BerryFocusEnergy_Pluck;
+                effect = 1;
+            }
+            break;
+        case HOLD_EFFECT_RANDOM_STAT_UP:
+            if (gBattleMons[battlerId].hp <= gBattleMons[battlerId].maxHP / battlerHoldEffectParam)
+            {
+                for (i = 0; i < 5 && gBattleMons[battlerId].statStages[STAT_ATK + i] >= 0xC; ++i);
+                if (i != 5)
+                {
+                    do
+                        i = Random() % 5;
+                    while (gBattleMons[battlerId].statStages[STAT_ATK + i] == 0xC);
+                    PREPARE_STAT_BUFFER(gBattleTextBuff1, i + 1);
+                    gBattleTextBuff2[0] = B_BUFF_PLACEHOLDER_BEGIN;
+                    gBattleTextBuff2[1] = B_BUFF_STRING;
+                    gBattleTextBuff2[2] = STRINGID_STATSHARPLY;
+                    gBattleTextBuff2[3] = STRINGID_STATSHARPLY >> 8;
+                    gBattleTextBuff2[4] = B_BUFF_STRING;
+                    gBattleTextBuff2[5] = STRINGID_STATROSE;
+                    gBattleTextBuff2[6] = STRINGID_STATROSE >> 8;
+                    gBattleTextBuff2[7] = EOS;
+                    gEffectBattler = battlerId;
+                    SET_STATCHANGER(i + 1, 2, FALSE);
+                    gBattleScripting.animArg1 = 0x21 + i + 6;
+                    gBattleScripting.animArg2 = 0;
+                    BattleScriptPush(gBattlescriptCurrInstr + 1);
+                    gBattlescriptCurrInstr = BattleScript_BerryStatRaise_Pluck;
+                    effect = 1;
+                }
+            }
+            break;
+        case HOLD_EFFECT_CURE_PAR:
+            if (gBattleMons[battlerId].status1 & STATUS1_PARALYSIS)
+            {
+                gBattleMons[battlerId].status1 &= ~(STATUS1_PARALYSIS);
+                BattleScriptPush(gBattlescriptCurrInstr + 1);
+                gBattlescriptCurrInstr = BattleScript_BerryCurePrlz_Pluck;
+                effect = 2;
+            }
+            break;
+        case HOLD_EFFECT_CURE_PSN:
+            if (gBattleMons[battlerId].status1 & STATUS1_PSN_ANY)
+            {
+                gBattleMons[battlerId].status1 &= ~(STATUS1_PSN_ANY | STATUS1_TOXIC_COUNTER);
+                BattleScriptPush(gBattlescriptCurrInstr + 1);
+                gBattlescriptCurrInstr = BattleScript_BerryCurePsn_Pluck;
+                effect = 2;
+            }
+            break;
+        case HOLD_EFFECT_CURE_BRN:
+            if (gBattleMons[battlerId].status1 & STATUS1_BURN)
+            {
+                gBattleMons[battlerId].status1 &= ~(STATUS1_BURN);
+                BattleScriptPush(gBattlescriptCurrInstr + 1);
+                gBattlescriptCurrInstr = BattleScript_BerryCureBrn_Pluck;
+                effect = 2;
+            }
+            break;
+        case HOLD_EFFECT_CURE_FRZ:
+            if (gBattleMons[battlerId].status1 & STATUS1_FREEZE)
+            {
+                gBattleMons[battlerId].status1 &= ~(STATUS1_FREEZE);
+                BattleScriptPush(gBattlescriptCurrInstr + 1);
+                gBattlescriptCurrInstr = BattleScript_BerryCureFrz_Pluck;
+                effect = 2;
+            }
+            break;
+        case HOLD_EFFECT_CURE_SLP:
+            if (gBattleMons[battlerId].status1 & STATUS1_SLEEP)
+            {
+                gBattleMons[battlerId].status1 &= ~(STATUS1_SLEEP);
+                gBattleMons[battlerId].status2 &= ~(STATUS2_NIGHTMARE);
+                BattleScriptPush(gBattlescriptCurrInstr + 1);
+                gBattlescriptCurrInstr = BattleScript_BerryCureSlp_Pluck;
+                effect = 2;
+            }
+            break;
+        case HOLD_EFFECT_CURE_CONFUSION:
+            if (gBattleMons[battlerId].status2 & STATUS2_CONFUSION)
+            {
+                gBattleMons[battlerId].status2 &= ~(STATUS2_CONFUSION);
+                BattleScriptPush(gBattlescriptCurrInstr + 1);
+                gBattlescriptCurrInstr = BattleScript_BerryCureConfusion_Pluck;
+                effect = 2;
+            }
+            break;
+        case HOLD_EFFECT_CURE_STATUS:
+            if (gBattleMons[battlerId].status1 & STATUS1_ANY || gBattleMons[battlerId].status2 & STATUS2_CONFUSION)
+            {
+                i = 0;
+                if (gBattleMons[battlerId].status1 & STATUS1_PSN_ANY)
+                {
+                    StringCopy(gBattleTextBuff1, gStatusConditionString_PoisonJpn);
+                    ++i;
+                }
+                if (gBattleMons[battlerId].status1 & STATUS1_SLEEP)
+                {
+                    gBattleMons[battlerId].status2 &= ~(STATUS2_NIGHTMARE);
+                    StringCopy(gBattleTextBuff1, gStatusConditionString_SleepJpn);
+                    ++i;
+                }
+                if (gBattleMons[battlerId].status1 & STATUS1_PARALYSIS)
+                {
+                    StringCopy(gBattleTextBuff1, gStatusConditionString_ParalysisJpn);
+                    ++i;
+                }
+                if (gBattleMons[battlerId].status1 & STATUS1_BURN)
+                {
+                    StringCopy(gBattleTextBuff1, gStatusConditionString_BurnJpn);
+                    ++i;
+                }
+                if (gBattleMons[battlerId].status1 & STATUS1_FREEZE)
+                {
+                    StringCopy(gBattleTextBuff1, gStatusConditionString_IceJpn);
+                    ++i;
+                }
+                if (gBattleMons[battlerId].status2 & STATUS2_CONFUSION)
+                {
+                    StringCopy(gBattleTextBuff1, gStatusConditionString_ConfusionJpn);
+                    ++i;
+                }
+                if (!(i > 1))
+                    gBattleCommunication[MULTISTRING_CHOOSER] = 0;
+                else
+                    gBattleCommunication[MULTISTRING_CHOOSER] = 1;
+                gBattleMons[battlerId].status1 = 0;
+                gBattleMons[battlerId].status2 &= ~(STATUS2_CONFUSION);
+                BattleScriptPush(gBattlescriptCurrInstr + 1);
+                gBattlescriptCurrInstr = BattleScript_BerryCureChosenStatus_Pluck;
+                effect = 2;
+            }
+            break;
+        case HOLD_EFFECT_CURE_ATTRACT:
+            if (gBattleMons[battlerId].status2 & STATUS2_INFATUATION)
+            {
+                gBattleMons[battlerId].status2 &= ~(STATUS2_INFATUATION);
+                StringCopy(gBattleTextBuff1, gStatusConditionString_LoveJpn);
+                BattleScriptPush(gBattlescriptCurrInstr + 1);
+                gBattlescriptCurrInstr = BattleScript_BerryCureChosenStatus_Pluck;
+                gBattleCommunication[MULTISTRING_CHOOSER] = 0;
+                effect = 1;
+            }
+            break;
+        default:
+            BattleScriptPush(gBattlescriptCurrInstr + 1);
+            gBattlescriptCurrInstr = BattleScript_ResetLastUsedItem;
+
+    }
+    if(effect){
+        if(effect == 2){
+            SetMonData(mon, MON_DATA_STATUS, &gBattleMons[battlerId].status1);
+            BtlController_EmitSetMonData(0, REQUEST_STATUS_BATTLE, 0, 4, &gBattleMons[gBattlerAttacker].status1);
+            BtlController_EmitStatusIconUpdate(0, gBattleMons[gActiveBattler].status1, gBattleMons[gActiveBattler].status2);
+        }
+        gTmpAttackerItemStore = gBattleMons[gBattlerAttacker].item;
+        gBattleMons[gBattlerAttacker].item = gBattleMons[gBattlerTarget].item;
+    }
+    else{
+        BattleScriptPush(gBattlescriptCurrInstr + 1);
+        gBattlescriptCurrInstr = BattleScript_Pluck_NoEffect;
+    }
+    gBattleMons[gBattlerTarget].item = ITEM_NONE;
+    if (GetBattlerSide(gBattlerAttacker) == B_SIDE_PLAYER)
+        enemy_mon = &gEnemyParty[gBattlerPartyIndexes[gBattlerTarget]];
+    else
+        enemy_mon = &gPlayerParty[gBattlerPartyIndexes[gBattlerTarget]];
+    gBattleMons[gBattlerTarget].item = ITEM_NONE;
+    SetMonData(enemy_mon, MON_DATA_HELD_ITEM, &gBattleMons[gBattlerTarget].item);
+    return effect;
 }

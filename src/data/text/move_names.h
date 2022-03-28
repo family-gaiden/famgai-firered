@@ -360,5 +360,8 @@ const u8 gMoveNames[][13] = {
     _("HONE CLAWS"),
     _("OMINOUS WIND"),
     _("ZEN HEADBUTT"),
-    _("DOLL EYES")
+    _("DOLL EYES"),
+    _("BUG BITE"),
+    _("PLUCK"),
+    _("DOUBLE HIT")
 };

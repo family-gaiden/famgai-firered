@@ -565,6 +565,11 @@ const struct MonCoords gMonBackPicCoords[] =
         .size = 0x88,
         .y_offset = 0x03,
     },
+    [SPECIES_HAPPINY] =
+    {
+        .size = 0x85,
+        .y_offset = 0x0e,
+    },
     [SPECIES_CHANSEY] =
     {
         .size = 0x85,
@@ -609,6 +614,11 @@ const struct MonCoords gMonBackPicCoords[] =
     {
         .size = 0x85,
         .y_offset = 0x0e,
+    },
+    [SPECIES_MIME_JR] =
+    {
+        .size = 0x85,
+        .y_offset = 0x00,
     },
     [SPECIES_MR_MIME] =
     {
@@ -885,6 +895,11 @@ const struct MonCoords gMonBackPicCoords[] =
         .size = 0x66,
         .y_offset = 0x08,
     },
+    [SPECIES_TOGEKISS] =
+    {
+        .size = 0x86,
+        .y_offset = 0x08,
+    },
     [SPECIES_NATU] =
     {
         .size = 0x54,
@@ -954,6 +969,11 @@ const struct MonCoords gMonBackPicCoords[] =
     {
         .size = 0x66,
         .y_offset = 0x09,
+    },
+    [SPECIES_AMBIPOM] =
+    {
+        .size = 0x66,
+        .y_offset = 0x00,
     },
     [SPECIES_SUNKERN] =
     {
@@ -1129,6 +1149,11 @@ const struct MonCoords gMonBackPicCoords[] =
     {
         .size = 0x67,
         .y_offset = 0x06,
+    },
+    [SPECIES_MANTYKE] =
+    {
+        .size = 0x87,
+        .y_offset = 0x07,
     },
     [SPECIES_MANTINE] =
     {
@@ -2054,6 +2079,11 @@ const struct MonCoords gMonBackPicCoords[] =
     {
         .size = 0x87,
         .y_offset = 0x07,
+    },
+    [SPECIES_CHINGLING] =
+    {
+        .size = 0x47,
+        .y_offset = 0x08,
     },
     [SPECIES_CHIMECHO] =
     {

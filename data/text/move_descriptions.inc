@@ -1062,3 +1062,6 @@ gMoveDescription_PsychoBoost:: @ 84886A1
 
 gMoveDescription_DrainKiss::
 	.string "A life-sapping kiss\nthat restores over\nhalf of the damage\ndealt.$"
+
+gMoveDescription_BugBite::
+	.string "A life-sapping kiss\nthat restores over\nhalf of the damage\ndealt.$"

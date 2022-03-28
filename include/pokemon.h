@@ -294,7 +294,7 @@ enum
 #define EVO_FRIENDSHIP_NIGHT 0x0003 // Pokémon levels up at night with friendship ≥ 220
 #define EVO_LEVEL            0x0004 // Pokémon reaches the specified level
 #define EVO_TRADE            0x0005 // Pokémon is traded
-#define EVO_HELD_ITEM       0x0006 // Pokémon is traded while it's holding the specified item
+#define EVO_HELD_ITEM        0x0006 // Pokémon levels up while it's holding the specified item
 #define EVO_ITEM             0x0007 // specified item is used on Pokémon
 #define EVO_LEVEL_ATK_GT_DEF 0x0008 // Pokémon reaches the specified level with attack > defense
 #define EVO_LEVEL_ATK_EQ_DEF 0x0009 // Pokémon reaches the specified level with attack = defense
@@ -305,6 +305,7 @@ enum
 #define EVO_LEVEL_SHEDINJA   0x000e // Pokémon reaches the specified level (special value for Shedinja)
 #define EVO_BEAUTY           0x000f // Pokémon levels up with beauty ≥ specified value
 #define EVO_KNOWS_MOVE       0x0010 // Pokémon levels up with a specific move
+#define EVO_MANTYKE          0x0011 // Pokémon levels up with a specific move
 
 struct Evolution
 {

@@ -408,6 +408,9 @@ gBattleAnims_Moves::
 	.4byte Move_OMINOUS_WIND
 	.4byte Move_ZEN_HEADBUTT
 	.4byte Move_DOLL_EYES
+	.4byte Move_BUG_BITE
+	.4byte Move_PLUCK
+	.4byte Move_DOUBLE_HIT
 	.4byte Move_COUNT
 
 gBattleAnims_StatusConditions::
@@ -5552,6 +5555,23 @@ Move_BITE:: @ 81CE190
 	delay 1
 	end
 
+Move_BUG_BITE:: @ 81CE190
+	loadspritegfx ANIM_TAG_SHARP_TEETH
+	loadspritegfx ANIM_TAG_IMPACT
+	monbg 1
+	setalpha 12, 8
+	playsewithpan SE_M_BITE, 63
+	createsprite gSharpTeethSpriteTemplate, ANIM_ATTACKER, 2, 0, -32, 0, 0, 819, 10
+	createsprite gSharpTeethSpriteTemplate, ANIM_ATTACKER, 2, 0, 32, 4, 0, -819, 10
+	delay 10
+	createsprite gBasicHitSplatSpriteTemplate, ANIM_ATTACKER, 2, 0, 0, 1, 2
+	createvisualtask AnimTask_ShakeMon, 5, 1, 0, 4, 7, 1
+	waitforvisualfinish
+	clearmonbg 1
+	blendoff
+	delay 1
+	end
+
 Move_CRUNCH:: @ 81CE1EE
 	loadspritegfx ANIM_TAG_SHARP_TEETH
 	loadspritegfx ANIM_TAG_IMPACT
@@ -6528,6 +6548,14 @@ Move_PECK:: @ 81CF736
 	waitforvisualfinish
 	end
 
+Move_PLUCK:: @ 81CF736
+	loadspritegfx ANIM_TAG_IMPACT
+	playsewithpan SE_M_HORN_ATTACK, 63
+	createvisualtask AnimTask_RotateMonToSideAndRestore, 2, 3, -768, 1, 2
+	createsprite gFlashingHitSplatSpriteTemplate, ANIM_TARGET, 3, -12, 0, 1, 3
+	waitforvisualfinish
+	end
+
 Move_AEROBLAST:: @ 81CF75D
 	loadspritegfx ANIM_TAG_AIR_WAVE_2
 	loadspritegfx ANIM_TAG_IMPACT
@@ -6857,6 +6885,20 @@ Move_HI_JUMP_KICK:: @ 81CFE02
 	end
 
 Move_DOUBLE_KICK:: @ 81CFE98
+	loadspritegfx ANIM_TAG_HANDS_AND_FEET
+	loadspritegfx ANIM_TAG_IMPACT
+	monbg ANIM_DEF_PARTNER
+	setalpha 12, 8
+	createsprite gFistFootRandomPosSpriteTemplate, ANIM_ATTACKER, 3, 1, 20, 1
+	createvisualtask AnimTask_ShakeMon, 5, 1, 4, 0, 6, 1
+	playsewithpan SE_M_VITAL_THROW2, 63
+	waitforvisualfinish
+	waitforvisualfinish
+	clearmonbg ANIM_DEF_PARTNER
+	blendoff
+	end
+
+Move_DOUBLE_HIT:: @ 81CFE98
 	loadspritegfx ANIM_TAG_HANDS_AND_FEET
 	loadspritegfx ANIM_TAG_IMPACT
 	monbg ANIM_DEF_PARTNER

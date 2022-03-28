@@ -362,6 +362,9 @@ const u8 gMoveDescription_HoneClaws[] = _("The user sharpens\nits claws to boost
 const u8 gMoveDescription_OminousWind[] = _("A gust of repulsive\nwind. It may raise\nall the user's\nstats.");
 const u8 gMoveDescription_ZenHeadbutt[] = _("The user focuses\nits willpower and\nrams the foe. The\ntarget may flinch.");
 const u8 gMoveDescription_DollEyes[] = _("A cute stare, which\nlowers the targets\nATK stat. This move\nalways goes first.");
+const u8 gMoveDescription_BugBite[] = _("The user bites the\nfoe. If the foe\nholds a berry, the\nuser eats it.");
+const u8 gMoveDescription_Pluck[] = _("The user pecks the\nfoe. If the foe\nholds a berry, the\nuser eats it.");
+const u8 gMoveDescription_DoubleHit[] = _("The user slams the\nfoe with a tail,\netc. The target is\nhit twice.");
 
 const u8 *const gMoveDescriptionPointers[MOVES_COUNT - 1] = {
     [MOVE_POUND         - 1] = gMoveDescription_Pound,
@@ -725,4 +728,7 @@ const u8 *const gMoveDescriptionPointers[MOVES_COUNT - 1] = {
     [MOVE_OMINOUS_WIND  - 1] = gMoveDescription_OminousWind,
     [MOVE_ZEN_HEADBUTT  - 1] = gMoveDescription_ZenHeadbutt,
     [MOVE_DOLL_EYES  		- 1] = gMoveDescription_DollEyes,
+    [MOVE_BUG_BITE  		- 1] = gMoveDescription_BugBite,
+    [MOVE_PLUCK  		    - 1] = gMoveDescription_Pluck,
+    [MOVE_DOUBLE_HIT  	- 1] = gMoveDescription_DoubleHit,
 };

@@ -1469,6 +1469,19 @@ const struct PokedexEntry gPokedexEntries[] =
         .trainerOffset = 3,
     },
 
+    [NATIONAL_DEX_HAPPINY] =
+    {
+        .categoryName = _("EGG"),
+        .height = 11,
+        .weight = 346,
+        .description = gHappinyPokedexText,
+        .unusedDescription = gHappinyPokedexTextUnused,
+        .pokemonScale = 257,
+        .pokemonOffset = 6,
+        .trainerScale = 256,
+        .trainerOffset = -2,
+    },
+
     [NATIONAL_DEX_CHANSEY] =
     {
         .categoryName = _("EGG"),
@@ -1582,6 +1595,19 @@ const struct PokedexEntry gPokedexEntries[] =
         .unusedDescription = gStarmiePokedexTextUnused,
         .pokemonScale = 301,
         .pokemonOffset = 3,
+        .trainerScale = 256,
+        .trainerOffset = -2,
+    },
+
+    [NATIONAL_DEX_MIME_JR] =
+    {
+        .categoryName = _("BARRIER"),
+        .height = 13,
+        .weight = 545,
+        .description = gMimejrPokedexText,
+        .unusedDescription = gMimejrPokedexTextUnused,
+        .pokemonScale = 258,
+        .pokemonOffset = 4,
         .trainerScale = 256,
         .trainerOffset = -2,
     },
@@ -2314,6 +2340,19 @@ const struct PokedexEntry gPokedexEntries[] =
         .trainerOffset = -2,
     },
 
+    [NATIONAL_DEX_TOGEKISS] =
+    {
+        .categoryName = _("HAPPINESS"),
+        .height = 6,
+        .weight = 32,
+        .description = gTogekissPokedexText,
+        .unusedDescription = gTogekissPokedexTextUnused,
+        .pokemonScale = 424,
+        .pokemonOffset = 15,
+        .trainerScale = 256,
+        .trainerOffset = -2,
+    },
+
     [NATIONAL_DEX_NATU] =
     {
         .categoryName = _("TINY BIRD"),
@@ -2490,6 +2529,19 @@ const struct PokedexEntry gPokedexEntries[] =
         .weight = 115,
         .description = gAipomPokedexText,
         .unusedDescription = gAipomPokedexTextUnused,
+        .pokemonScale = 363,
+        .pokemonOffset = 8,
+        .trainerScale = 256,
+        .trainerOffset = -2,
+    },
+
+    [NATIONAL_DEX_AMBIPOM] =
+    {
+        .categoryName = _("LONG TAIL"),
+        .height = 8,
+        .weight = 115,
+        .description = gAmbipomPokedexText,
+        .unusedDescription = gAmbipomPokedexTextUnused,
         .pokemonScale = 363,
         .pokemonOffset = 8,
         .trainerScale = 256,
@@ -2949,6 +3001,19 @@ const struct PokedexEntry gPokedexEntries[] =
         .pokemonOffset = 8,
         .trainerScale = 256,
         .trainerOffset = -2,
+    },
+    
+    [NATIONAL_DEX_MANTYKE] =
+    {
+        .categoryName = _("KITE"),
+        .height = 21,
+        .weight = 2200,
+        .description = gMantykePokedexText,
+        .unusedDescription = gMantykePokedexTextUnused,
+        .pokemonScale = 275,
+        .pokemonOffset = 0,
+        .trainerScale = 360,
+        .trainerOffset = 6,
     },
 
     [NATIONAL_DEX_MANTINE] =
@@ -4665,6 +4730,19 @@ const struct PokedexEntry gPokedexEntries[] =
         .pokemonOffset = -1,
         .trainerScale = 371,
         .trainerOffset = 6,
+    },
+
+    [NATIONAL_DEX_CHINGLING] =
+    {
+        .categoryName = _("WIND CHIME"),
+        .height = 6,
+        .weight = 10,
+        .description = gChinglingPokedexText,
+        .unusedDescription = gChinglingPokedexTextUnused,
+        .pokemonScale = 505,
+        .pokemonOffset = -4,
+        .trainerScale = 256,
+        .trainerOffset = -2,
     },
 
     [NATIONAL_DEX_CHIMECHO] =

@@ -789,6 +789,13 @@ const u8 gRhydonPokedexText[] = _(
 
 const u8 gRhydonPokedexTextUnused[] = _("");
 
+const u8 gHappinyPokedexText[] = _(
+    "It lays several eggs a day. The eggs are\n"
+    "apparently rich in nutrients and extremely\n"
+    "delicious.");
+
+const u8 gHappinyPokedexTextUnused[] = _("");
+
 const u8 gChanseyPokedexText[] = _(
     "It lays several eggs a day. The eggs are\n"
     "apparently rich in nutrients and extremely\n"
@@ -851,6 +858,13 @@ const u8 gStarmiePokedexText[] = _(
     "that it is an alien creature.");
 
 const u8 gStarmiePokedexTextUnused[] = _("");
+
+const u8 gMimejrPokedexText[] = _(
+    "It is adept at conning people. It is said\n"
+    "to be able to create walls out of thin\n"
+    "air by miming.");
+
+const u8 gMimejrPokedexTextUnused[] = _("");
 
 const u8 gMrmimePokedexText[] = _(
     "It is adept at conning people. It is said\n"
@@ -1249,6 +1263,13 @@ const u8 gTogeticPokedexText[] = _(
 
 const u8 gTogeticPokedexTextUnused[] = _("");
 
+const u8 gTogekissPokedexText[] = _(
+    "It grows dispirited if it is not with kind\n"
+    "people. It can float in midair without\n"
+    "moving its wings.");
+
+const u8 gTogekissPokedexTextUnused[] = _("");
+
 const u8 gNatuPokedexText[] = _(
     "It usually forages for food on the ground\n"
     "but may, on rare occasions, hop onto\n"
@@ -1346,6 +1367,13 @@ const u8 gAipomPokedexText[] = _(
     "tail for balance.");
 
 const u8 gAipomPokedexTextUnused[] = _("");
+
+const u8 gAmbipomPokedexText[] = _(
+    "It lives atop tall trees. When leaping\n"
+    "from branch to branch, it deftly uses its\n"
+    "tail for balance.");
+
+const u8 gAmbipomPokedexTextUnused[] = _("");
 
 const u8 gSunkernPokedexText[] = _(
     "It lives by drinking only dewdrops from\n"
@@ -1591,6 +1619,13 @@ const u8 gDelibirdPokedexText[] = _(
     "awaiting chicks.");
 
 const u8 gDelibirdPokedexTextUnused[] = _("");
+
+const u8 gMantykePokedexText[] = _(
+    "Swimming freely in open seas, it may fly\n"
+    "out of the water and over the waves if it\n"
+    "builds up enough speed.");
+
+const u8 gMantykePokedexTextUnused[] = _("");
 
 const u8 gMantinePokedexText[] = _(
     "Swimming freely in open seas, it may fly\n"
@@ -2522,6 +2557,13 @@ const u8 gTropiusPokedexText[] = _(
     "The fruit grows twice a year.");
 
 const u8 gTropiusPokedexTextUnused[] = _("");
+
+const u8 gChinglingPokedexText[] = _(
+    "It travels by riding on winds. It cleverly\n"
+    "uses its long tail to pluck nuts and\n"
+    "berries, which it loves to eat.");
+
+const u8 gChinglingPokedexTextUnused[] = _("");
 
 const u8 gChimechoPokedexText[] = _(
     "It travels by riding on winds. It cleverly\n"

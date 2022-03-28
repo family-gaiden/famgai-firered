@@ -511,6 +511,11 @@ static const u16 sSpeciesToHoennPokedexNum[] = // Assigns all species to the Hoe
     SPECIES_TO_HOENN(ROSERADE),
     SPECIES_TO_HOENN(BONSLY),
     SPECIES_TO_HOENN(MUNCHLAX),
+    SPECIES_TO_HOENN(TOGEKISS),
+    SPECIES_TO_HOENN(HAPPINY),
+    SPECIES_TO_HOENN(MANTYKE),
+    SPECIES_TO_HOENN(MIME_JR),
+    SPECIES_TO_HOENN(CHINGLING),
 };
 
 static const u16 sSpeciesToNationalPokedexNum[] = // Assigns all species to the National Dex Index (Summary No. for National Dex)
@@ -930,6 +935,11 @@ static const u16 sSpeciesToNationalPokedexNum[] = // Assigns all species to the 
     SPECIES_TO_NATIONAL(ROSERADE),
     SPECIES_TO_NATIONAL(BONSLY),
     SPECIES_TO_NATIONAL(MUNCHLAX),
+    SPECIES_TO_NATIONAL(TOGEKISS),
+    SPECIES_TO_NATIONAL(HAPPINY),
+    SPECIES_TO_NATIONAL(MANTYKE),
+    SPECIES_TO_NATIONAL(MIME_JR),
+    SPECIES_TO_NATIONAL(CHINGLING),
 };
 
 static const u16 sHoennToNationalOrder[] = // Assigns Hoenn Dex Pokémon (Using National Dex Index)
@@ -1349,6 +1359,11 @@ static const u16 sHoennToNationalOrder[] = // Assigns Hoenn Dex Pokémon (Using 
     HOENN_TO_NATIONAL(ROSERADE),
     HOENN_TO_NATIONAL(BONSLY),
     HOENN_TO_NATIONAL(MUNCHLAX),
+    HOENN_TO_NATIONAL(TOGEKISS),
+    HOENN_TO_NATIONAL(HAPPINY),
+    HOENN_TO_NATIONAL(MANTYKE),
+    HOENN_TO_NATIONAL(MIME_JR),
+    HOENN_TO_NATIONAL(CHINGLING),
 };
 
 static const struct SpindaSpot sSpindaSpotGraphics[] =
@@ -3738,6 +3753,19 @@ u8 CalculateEnemyPartyCount(void)
     return gEnemyPartyCount;
 }
 
+u8 HasRemoraid(){
+    int i = 0;
+    int partyNum = CalculatePlayerPartyCount();
+    u16 req_species;
+    for(i = 0; i < partyNum; i++){
+        req_species = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES2, NULL);
+        if(req_species == SPECIES_REMORAID){
+            return 1;
+        }
+    }
+    return 0;
+}
+
 u8 GetMonsStateToDoubles(void)
 {
     s32 aliveCount = 0;
@@ -4934,6 +4962,9 @@ u16 GetEvolutionTargetSpecies(struct Pokemon *mon, u8 type, u16 evolutionItem)
     u8 beauty = GetMonData(mon, MON_DATA_BEAUTY, NULL);
     u16 upperPersonality = personality >> 16;
     u8 holdEffect;
+    u16 req_species;
+    u16 count;
+    int num_party_mons;
 
     if (heldItem == ITEM_ENIGMA_BERRY)
         holdEffect = gSaveBlock1Ptr->enigmaBerry.holdEffect;
@@ -5010,6 +5041,8 @@ u16 GetEvolutionTargetSpecies(struct Pokemon *mon, u8 type, u16 evolutionItem)
             case EVO_HELD_ITEM:
                 if (gEvolutionTable[species][i].param == heldItem)
                 {
+                    heldItem = 0;
+                    SetMonData(mon, MON_DATA_HELD_ITEM, &heldItem);
                     targetSpecies = gEvolutionTable[species][i].targetSpecies;
                 }
                 break;
@@ -5018,6 +5051,11 @@ u16 GetEvolutionTargetSpecies(struct Pokemon *mon, u8 type, u16 evolutionItem)
 										targetSpecies = gEvolutionTable[species][i].targetSpecies;
 								}
 								break;
+            case EVO_MANTYKE:
+                if(HasRemoraid()){
+                    targetSpecies = gEvolutionTable[species][count].targetSpecies;
+                }
+                break;
 						}
         }
         break;
